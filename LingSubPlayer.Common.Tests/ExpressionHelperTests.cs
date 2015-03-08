@@ -11,6 +11,8 @@ namespace LingSubPlayer.Common.Tests
         {
             public string TestProperty { get; set; }
 
+            public int TestIntProperty { get; set; }
+
             public string TestMethod()
             {
                 return null;
@@ -43,6 +45,16 @@ namespace LingSubPlayer.Common.Tests
             Expression<Func<TestClass, string>> expr = tc => tc.TestMethod() + tc.TestProperty;
 
             Assert.Throws<NotSupportedException>(() => { expr.GetPropertyOrMethodName(); });
+        }
+
+        [Test]
+        public void ConvertStatementsAreUnwrapped()
+        {
+            Expression<Func<TestClass, object>> expr = tc => tc.TestIntProperty;
+
+            var propertyName = expr.GetPropertyOrMethodName();
+
+            Assert.That(propertyName, Is.EqualTo("TestIntProperty"));
         }
     }
 }

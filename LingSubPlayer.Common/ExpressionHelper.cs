@@ -9,8 +9,19 @@ namespace LingSubPlayer.Common
     {
         public static string GetPropertyOrMethodName<T, TResult>(this Expression<Func<T, TResult>> expression)
         {
-            var memberExpression = expression.Body as MemberExpression;
-            var methodCallExpression = expression.Body as MethodCallExpression;
+            var body = expression.Body;
+
+            if (body.NodeType == ExpressionType.Convert)
+            {
+                var unary = body as UnaryExpression;
+                if (unary != null)
+                {
+                    body = unary.Operand;
+                }
+            }
+
+            var memberExpression = body as MemberExpression;
+            var methodCallExpression = body as MethodCallExpression;
 
             if (memberExpression == null && methodCallExpression == null)
             {
