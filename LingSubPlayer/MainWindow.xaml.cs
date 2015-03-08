@@ -1,9 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using LingSubPlayer.Properties;
 using Vlc.DotNet.Core;
 using Vlc.DotNet.Core.Medias;
 
@@ -24,8 +23,10 @@ namespace LingSubPlayer
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            vlcControl.Media = new PathMedia(@"..\..\..\data\cartoon.flv");
-            vlcControl.Play();
+            VlcControl.Media = new PathMedia(@"..\..\..\data\cartoon.flv");
+            VlcControl.Play();
+
+            //Task.Delay(200).ContinueWith((t) => { VlcControl.AudioProperties.IsMute = true; });
         }
 
         
@@ -37,14 +38,14 @@ namespace LingSubPlayer
 
         private void TogglePlayPauseExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            if (vlcControl.IsPaused)
+            if (VlcControl.IsPaused)
             {
-                vlcControl.Play();
+                VlcControl.Play();
             }
 
-            if (vlcControl.IsPlaying)
+            if (VlcControl.IsPlaying)
             {
-                vlcControl.Pause();
+                VlcControl.Pause();
             }
         }
 
