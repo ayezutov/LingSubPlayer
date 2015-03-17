@@ -1,4 +1,4 @@
-﻿namespace LingSubPlayer.Common.Subtitles
+﻿namespace LingSubPlayer.Common.Subtitles.Data
 {
     public struct Rect
     {

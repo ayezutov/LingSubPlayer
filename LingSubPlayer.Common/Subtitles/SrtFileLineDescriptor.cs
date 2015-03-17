@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using LingSubPlayer.Common.Subtitles.Data;
 
 namespace LingSubPlayer.Common.Subtitles
 {
@@ -6,6 +7,7 @@ namespace LingSubPlayer.Common.Subtitles
     {
         public static readonly Regex BlockBeginningPattern = new Regex(@"^\d+$", RegexOptions.Compiled);
         private readonly string line;
+        private readonly SrtFileTimeAndPositionLineParser srtFileTimeAndPositionLineParser = new SrtFileTimeAndPositionLineParser();
 
         public SrtFileLineDescriptor(string line)
         {
@@ -20,12 +22,12 @@ namespace LingSubPlayer.Common.Subtitles
         private SrtFileTimeAndPositionLine timeAndPosition;
         public bool IsTimeAndPosition
         {
-            get { return timeAndPosition != null || ((timeAndPosition = SrtFileTimeAndPositionLine.Parse(line)) != null); }
+            get { return timeAndPosition != null || ((timeAndPosition = srtFileTimeAndPositionLineParser.Parse(line)) != null); }
         }
 
         public SrtFileTimeAndPositionLine TimeAndPositionLine
         {
-            get { return timeAndPosition ?? (timeAndPosition = SrtFileTimeAndPositionLine.Parse(line)); }
+            get { return timeAndPosition ?? (timeAndPosition = srtFileTimeAndPositionLineParser.Parse(line)); }
         }
     }
 }

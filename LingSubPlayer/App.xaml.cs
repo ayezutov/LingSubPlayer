@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+using System.CodeDom.Compiler;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
+using Autofac;
 using Vlc.DotNet.Core;
 
 namespace LingSubPlayer
@@ -18,15 +16,27 @@ namespace LingSubPlayer
         /// <summary>
         /// Application Entry Point.
         /// </summary>
-        [System.STAThreadAttribute()]
-        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
+        [STAThread]
+        [DebuggerNonUserCode]
+        [GeneratedCode("PresentationBuildTasks", "4.0.0.0")]
         public static void Main()
         {
             VlcContextInitialize();
 
-            App app = new App();
-            app.Run(new MainWindow());
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder
+                .RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
+                .AsImplementedInterfaces()
+                .AsSelf();
+
+            var container = containerBuilder.Build();
+
+            using (var scope = container.BeginLifetimeScope())
+            {
+
+                App app = scope.Resolve<App>();
+                app.Run(scope.Resolve<MainWindow>());
+            }
         }
 
         private static void VlcContextInitialize()

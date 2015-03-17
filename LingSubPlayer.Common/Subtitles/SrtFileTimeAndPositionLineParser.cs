@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using LingSubPlayer.Common.Subtitles.Data;
 
 namespace LingSubPlayer.Common.Subtitles
 {
-    public class SrtFileTimeAndPositionLine
+    public class SrtFileTimeAndPositionLineParser
     {
         public static readonly Regex TimeAndPositionPattern = new Regex(@"^(?<startTime>\d{1,2}\:\d{1,2}\:\d{1,2}[\.\,]\d+)\s*\-\-\>\s*(?<endTime>\d{1,2}\:\d{1,2}\:\d{1,2}[\.\,]\d+)\s*(?<rest>.*)$", RegexOptions.Compiled);
         private static readonly Regex X1Pattern = new Regex(@"X1:(?<value>\d+)", RegexOptions.Compiled);
@@ -12,7 +13,7 @@ namespace LingSubPlayer.Common.Subtitles
         private static readonly Regex Y1Pattern = new Regex(@"Y1:(?<value>\d+)", RegexOptions.Compiled);
         private static readonly Regex Y2Pattern = new Regex(@"Y2:(?<value>\d+)", RegexOptions.Compiled);
 
-        public static SrtFileTimeAndPositionLine Parse(string line)
+        public SrtFileTimeAndPositionLine Parse(string line)
         {
             var match = TimeAndPositionPattern.Match(line);
 
@@ -24,13 +25,13 @@ namespace LingSubPlayer.Common.Subtitles
             var rest = match.Groups["rest"].Value;
 
             return new SrtFileTimeAndPositionLine
-            {
-                StartTime = TimeSpan.Parse(match.Groups["startTime"].Value.Replace(',', '.'), CultureInfo.InvariantCulture),
-                EndTime = TimeSpan.Parse(match.Groups["endTime"].Value.Replace(',', '.'), CultureInfo.InvariantCulture),
-                BoundingRect = !string.IsNullOrEmpty(rest) 
-                    ? new Rect(GetCoord(X1Pattern, rest), GetCoord(X2Pattern, rest), GetCoord(Y1Pattern, rest), GetCoord(Y2Pattern, rest)) 
-                    : new Rect(0,0,0,0)
-            };
+            (
+                TimeSpan.Parse(match.Groups["startTime"].Value.Replace(',', '.'), CultureInfo.InvariantCulture),
+                TimeSpan.Parse(match.Groups["endTime"].Value.Replace(',', '.'), CultureInfo.InvariantCulture),
+                !string.IsNullOrEmpty(rest)
+                    ? new Rect(GetCoord(X1Pattern, rest), GetCoord(X2Pattern, rest), GetCoord(Y1Pattern, rest), GetCoord(Y2Pattern, rest))
+                    : new Rect(0, 0, 0, 0)
+            );
         }
 
         private static double GetCoord(Regex pattern, string text)
@@ -44,12 +45,6 @@ namespace LingSubPlayer.Common.Subtitles
 
             double temp;
             return double.TryParse(match.Groups["value"].Value, out temp) ? temp : 0;
-        }
-
-        public TimeSpan StartTime { get; private set; }
-
-        public TimeSpan EndTime { get; private set; }
-
-        public Rect BoundingRect { get; private set; }
+        } 
     }
 }

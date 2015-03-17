@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace LingSubPlayer.Common.Subtitles
+namespace LingSubPlayer.Common.Subtitles.Data
 {
     public class SubtitlesParserException : Exception
     {

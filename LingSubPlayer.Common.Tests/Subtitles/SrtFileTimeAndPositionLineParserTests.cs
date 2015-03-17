@@ -1,16 +1,17 @@
 ﻿using System;
 using LingSubPlayer.Common.Subtitles;
+using LingSubPlayer.Common.Subtitles.Data;
 using NUnit.Framework;
 
 namespace LingSubPlayer.Common.Tests.Subtitles
 {
     [TestFixture]
-    public class SrtFileTimeAndPositionLineTests
+    public class SrtFileTimeAndPositionLineParserTests
     {
         [TestCaseSource("Data")]
         public void VerifyLineParsing(string value, TimeSpan expectedStartTime, TimeSpan expectedEndTime, Rect expectedRect)
         {
-            var result = SrtFileTimeAndPositionLine.Parse(value);
+            var result = new SrtFileTimeAndPositionLineParser().Parse(value);
 
             Assert.That(result.StartTime, Is.EqualTo(expectedStartTime));
             Assert.That(result.EndTime, Is.EqualTo(expectedEndTime));

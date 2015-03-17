@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>..\packages\NSubstitute.1.8.1.0\lib\net45\NSubstitute.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.core">
       <HintPath>..\packages\NUnitTestAdapter.1.2\lib\nunit.core.dll</HintPath>
       <Private>False</Private>
@@ -62,8 +68,9 @@
   <ItemGroup>
     <Compile Include="ExpressionHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\CommonTestUtilities.cs" />
     <Compile Include="Subtitles\SrtFileLineDescriptorTests.cs" />
-    <Compile Include="Subtitles\SrtFileTimeAndPositionLineTests.cs" />
+    <Compile Include="Subtitles\SrtFileTimeAndPositionLineParserTests.cs" />
     <Compile Include="Subtitles\SrtSubtitlesParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +82,9 @@
       <Project>{9A54737C-B098-4C43-88BB-0C71790EE47B}</Project>
       <Name>LingSubPlayer.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

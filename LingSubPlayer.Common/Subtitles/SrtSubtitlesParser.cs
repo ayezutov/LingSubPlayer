@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
+using LingSubPlayer.Common.Subtitles.Data;
 
 namespace LingSubPlayer.Common.Subtitles
 {
     public class SrtSubtitlesParser
     {
-        private enum State
+        private readonly IFormattedTextParser formattedTextParser;
+
+        public SrtSubtitlesParser(IFormattedTextParser formattedTextParser)
         {
-            NotStarted,
-            BlockBeginningLine,
-            TimeAndPositionLine,
-            TextLine,
-            SeparatorLine,
-            Finished
+            this.formattedTextParser = formattedTextParser;
         }
 
-        private State state;
+        private SrtParserState state;
 
         /// <summary>
         /// Parses SRT (SubRip) file and returns <see cref="VideoSubtitleCollection"/>
@@ -32,7 +29,7 @@ namespace LingSubPlayer.Common.Subtitles
             {
                 var result = new List<VideoSubtitlesRecord>();
 
-                if (state != State.NotStarted && state != State.Finished)
+                if (state != SrtParserState.NotStarted && state != SrtParserState.Finished)
                 {
                     throw new NotSupportedException("Current SRT parser is in use.");
                 }
@@ -48,17 +45,19 @@ namespace LingSubPlayer.Common.Subtitles
                         
                         if (string.IsNullOrEmpty(line))
                         {
-                            if (state != State.TextLine)
+                            if (state != SrtParserState.TextLine)
                             {
                                 throw new SubtitlesParserException(
                                     string.Format(
                                         "The format of subtitles in block #{0} is invalid: no text was found",
-                                        result.Count));
+                                        result.Count + 1));
                             }
 
-                            record.Value = FormattedText.Parse(textBuffer.ToString());
+                            record.Value = formattedTextParser.Parse(textBuffer.ToString());
                             result.Add(record);
-                            state = State.SeparatorLine;
+                            state = SrtParserState.SeparatorLine;
+                            record = new VideoSubtitlesRecord();
+                            textBuffer.Clear();
 
                             if (line == null)
                             {
@@ -71,49 +70,46 @@ namespace LingSubPlayer.Common.Subtitles
 
                         switch (state)
                         {
-                            case State.NotStarted:
-                            case State.SeparatorLine:
+                            case SrtParserState.NotStarted:
+                            case SrtParserState.SeparatorLine:
 
                                 if (!lineDescriptor.IsBlockBeginning)
                                 {
                                     throw new SubtitlesParserException(
                                     string.Format(
                                         "The format of subtitles in block #{0} is invalid: the line following separator (or the first line in file) is not block beginning (counter of subtitles)",
-                                        result.Count));
+                                        result.Count + 1));
                                 }
 
-                                state = State.BlockBeginningLine;
+                                state = SrtParserState.BlockBeginningLine;
                                 break;
 
-                            case State.BlockBeginningLine:
+                            case SrtParserState.BlockBeginningLine:
 
                                 if (!lineDescriptor.IsTimeAndPosition)
                                 {
                                     throw new SubtitlesParserException(
                                     string.Format(
-                                        "The format of subtitles in block #{0} is invalid: the line following separator (or the first line in file) is not block beginning (counter of subtitles)",
-                                        result.Count));
+                                        "The format of subtitles in block #{0} is invalid: the line following block beginning is not a supported time notation",
+                                        result.Count + 1));
                                 }
 
                                 var timeAndPositionLine = lineDescriptor.TimeAndPositionLine;
                                 record.StartTime = timeAndPositionLine.StartTime;
                                 record.EndTime = timeAndPositionLine.EndTime;
 
-                                state  = State.TimeAndPositionLine;
+                                state  = SrtParserState.TimeAndPositionLine;
 
                                 break;
 
-                            case State.TimeAndPositionLine:
-                            case State.TextLine:
+                            case SrtParserState.TimeAndPositionLine:
+                            case SrtParserState.TextLine:
 
                                 textBuffer.Append((textBuffer.Length != 0 ? Environment.NewLine : string.Empty) + line);
-                                state = State.TextLine;
+                                state = SrtParserState.TextLine;
 
                                 break;
-
                         }
-
-
                     }
                 }
 
@@ -121,61 +117,8 @@ namespace LingSubPlayer.Common.Subtitles
             }
             finally
             {
-                state = State.Finished;
+                state = SrtParserState.Finished;
             }
-        }
-    }
-
-    public class VideoSubtitleCollection
-    {
-        private readonly ObservableCollection<VideoSubtitlesRecord> subtitles;
-
-        public VideoSubtitleCollection(VideoSubtitlesRecord[] videoSubtitlesRecords)
-        {
-            subtitles = new ObservableCollection<VideoSubtitlesRecord>(videoSubtitlesRecords);
-        }
-
-        public int Count
-        {
-            get { return subtitles.Count; }
-        }
-
-        public void Add(VideoSubtitlesRecord record)
-        {
-        }
-
-        public IReadOnlyList<VideoSubtitlesRecord> Subtitles
-        {
-            get { return subtitles; }
-        }
-    }
-
-    public class VideoSubtitlesRecord
-    {
-        public TimeSpan StartTime { get; set; }
-        
-        public TimeSpan EndTime { get; set; }
-
-        public FormattedText Value { get; set; }
-    }
-
-    public class FormattedText
-    {
-        private readonly string value;
-
-        public FormattedText(string value)
-        {
-            this.value = value;
-        }
-
-        public override string ToString()
-        {
-            return value;
-        }
-
-        public static FormattedText Parse(string text)
-        {
-            return new FormattedText(text);
         }
     }
 }
