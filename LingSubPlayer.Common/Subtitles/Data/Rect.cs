@@ -46,5 +46,10 @@
                 return hashCode;
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("X1:{0} X2:{1} Y1:{2} Y2:{3}", X1, X2, Y1, Y2);
+        }
     }
 }

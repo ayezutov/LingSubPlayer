@@ -100,10 +100,7 @@ Second.";
             Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(result.Subtitles[0].StartTime, Is.EqualTo(TimeSpan.FromSeconds(13.313)));
             Assert.That(result.Subtitles[0].EndTime, Is.EqualTo(TimeSpan.FromSeconds(15.645)));
-            Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo(@"First.
-6
-00:00:23,313 --> 00:00:25,645
-Second."));
+            Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo(string.Format(@"First.{0}6{0}00:00:23,313 --> 00:00:25,645{0}Second.", Environment.NewLine)));
         }
 
         [Test]
