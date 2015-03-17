@@ -11,4 +11,81 @@
     <system:Double x:Key="ProgressBarHeightCollapsed">3</system:Double>
     <system:Double x:Key="ControlBarHeight">20</system:Double>
     
+    <!-- Color adjustments -->
+    <Style TargetType="{x:Type ProgressBar}">
+        <Setter Property="Foreground" Value="Tomato"></Setter>
+        <Setter Property="Background" Value="#444444"></Setter>
+        <Setter Property="BorderThickness" Value="0"></Setter>
+    </Style>
+    
+    <Style x:Key="ControlPanel" TargetType="{x:Type StackPanel}">
+        <Setter Property="Background" Value="#111111"></Setter>
+    </Style>
+    
+    <Style x:Key="Player-Play" TargetType="{x:Type Button}"></Style>
+
+    <Style TargetType="TextBlock" x:Key="SubtitlesTextblock">
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="Width" Value="500" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontFamily" Value="Verdana Bold" />
+        <Setter Property="LineHeight" Value="24" />
+        <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect ShadowDepth="1" BlurRadius="3" Opacity="1" Direction="135"/>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Resources>
+            <Style TargetType="Run">
+                <Style.Triggers>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsMouseOver" Value="True"></Condition>
+                        </MultiTrigger.Conditions>
+                        <MultiTrigger.Setters>
+                            <Setter Property="TextDecorations">
+                                <Setter.Value>
+                                    <TextDecorationCollection>
+                                        <TextDecoration Location="Underline" PenOffset="3"></TextDecoration>
+                                    </TextDecorationCollection>
+                                </Setter.Value>
+                            </Setter>
+                        </MultiTrigger.Setters>
+                    </MultiTrigger>
+                </Style.Triggers>
+            </Style>
+        </Style.Resources>
+    </Style>
+    
+    <Style TargetType="Viewbox" x:Key="SubtitlesViewbox">
+        <Style.Resources>
+            <Style TargetType="Border">
+                <Setter Property="BorderBrush" Value="Transparent"></Setter>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect ShadowDepth="1" BlurRadius="3" Opacity="1" Direction="-45"></DropShadowEffect>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource SubtitlesTextblock}" />
+        </Style.Resources>
+    </Style>
+
+    <Style TargetType="Viewbox" x:Key="TranslatedSubtitlesViewbox" BasedOn="{StaticResource SubtitlesViewbox}">
+        <Setter Property="Margin" Value="15,0"></Setter>
+        <Style.Resources>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource SubtitlesTextblock}">
+                <Setter Property="Foreground" Value="Yellow"/>
+                <Setter Property="FontSize" Value="10"></Setter>
+                <Setter Property="Width" Value="390"></Setter>
+                <Setter Property="LineHeight" Value="14" />
+            </Style>
+        </Style.Resources>
+    </Style>
 </ResourceDictionary>

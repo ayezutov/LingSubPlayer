@@ -62,9 +62,13 @@
   <ItemGroup>
     <Compile Include="ExpressionHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Subtitles\SrtFileLineDescriptorTests.cs" />
+    <Compile Include="Subtitles\SrtFileTimeAndPositionLineTests.cs" />
+    <Compile Include="Subtitles\SrtSubtitlesParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Subtitles\TestData\sample-subtitles-file.srt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LingSubPlayer.Common\LingSubPlayer.Common.csproj">

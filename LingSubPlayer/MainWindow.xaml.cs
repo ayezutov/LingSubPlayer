@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using Vlc.DotNet.Core;
 using Vlc.DotNet.Core.Medias;
@@ -62,6 +63,15 @@ namespace LingSubPlayer
         private void Control_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
 
+        }
+
+        private void TextBlockMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var run = e.OriginalSource as Run;
+            if (run != null)
+            {
+                MessageBox.Show(run.Text);
+            }
         }
     }
 }

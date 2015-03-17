@@ -41,6 +41,11 @@
   <ItemGroup>
     <Compile Include="ExpressionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Subtitles\Rect.cs" />
+    <Compile Include="Subtitles\SrtFileLineDescriptor.cs" />
+    <Compile Include="Subtitles\SrtFileTimeAndPositionLine.cs" />
+    <Compile Include="Subtitles\SrtSubtitlesParser.cs" />
+    <Compile Include="Subtitles\SubtitlesParserException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
