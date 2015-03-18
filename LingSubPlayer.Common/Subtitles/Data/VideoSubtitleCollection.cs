@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace LingSubPlayer.Common.Subtitles.Data
 {
@@ -17,13 +19,15 @@ namespace LingSubPlayer.Common.Subtitles.Data
             get { return subtitles.Count; }
         }
 
-        public void Add(VideoSubtitlesRecord record)
-        {
-        }
-
         public IReadOnlyList<VideoSubtitlesRecord> Subtitles
         {
             get { return subtitles; }
+        }
+
+        public FormattedText GetTextFromPosition(TimeSpan position)
+        {
+            var videoSubtitlesRecord = subtitles.FirstOrDefault(s => (s.StartTime <= position) && (s.EndTime >= position));
+            return videoSubtitlesRecord != null ? videoSubtitlesRecord.Value : null;
         }
     }
 }
