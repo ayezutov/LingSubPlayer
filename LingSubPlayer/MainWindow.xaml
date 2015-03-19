@@ -34,33 +34,11 @@
             </Grid.Background>
         </Grid>
 
-        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LastChildFill="False">
+        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LastChildFill="False" x:Name="SubtitlesPanel">
             <Grid DockPanel.Dock="Bottom"  Height="{StaticResource ControlBarHeight}" Margin="0,10,0,0"></Grid>
             <Viewbox DockPanel.Dock="Bottom" Style="{StaticResource SubtitlesViewbox}">
                 <Border>
-                    <TextBlock MouseDown="TextBlockMouseDown">
-                        <Run>This</Run>
-                        <Run>is</Run>
-                        <Run>some</Run>
-                        <Run>text</Run>
-                        <Run>which</Run>
-                        <Run>gives</Run>
-                        <Run>some</Run>
-                        <Run>idea</Run>
-                        <Run>on</Run>
-                        <Run>how</Run>
-                        <Run>the</Run>
-                        <Run>subtitle</Run>
-                        <Run>text</Run>
-                        <Run>will</Run>
-                        <Run>look</Run>
-                        <Run>like</Run>
-                        <Run>when</Run>
-                        <Run>displayed</Run>
-                        <Run>from</Run>
-                        <Run>actual</Run>
-                        <Run>subtitles</Run>
-                    </TextBlock>
+                    <TextBlock MouseDown="TextBlockMouseDown" Text="{Binding Text}" />
                 </Border>
             </Viewbox>
 
@@ -79,6 +57,7 @@
                     <Button>&lt;- CC</Button>
                     <Button Command="TogglePlayPause">Play/Pause</Button>
                     <Button>CC -&gt;</Button>
+                    <TextBlock Foreground="White" Text="{Binding ElementName=VlcControl, Path=Time}"></TextBlock>
                 </StackPanel>
             </StackPanel>
             <ProgressBar DockPanel.Dock="Bottom" Height="{StaticResource ProgressBarHeightExpanded }" x:Name="Timeline"
