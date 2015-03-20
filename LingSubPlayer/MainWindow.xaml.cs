@@ -46,6 +46,21 @@ namespace LingSubPlayer
                     EndTime = TimeSpan.Parse("00:00:10.000"),
                     Value = new FormattedText("Text from sixth to tenth second")
                 }
+            }),
+            new VideoSubtitleCollection(new[]
+            {
+                new VideoSubtitlesRecord
+                {
+                    StartTime = TimeSpan.Parse("00:00:01.000"),
+                    EndTime = TimeSpan.Parse("00:00:04.000"),
+                    Value = new FormattedText("Текст с первой по четвёртую секунду")
+                },
+                new VideoSubtitlesRecord
+                {
+                    StartTime = TimeSpan.Parse("00:00:06.001"),
+                    EndTime = TimeSpan.Parse("00:00:10.000"),
+                    Value = new FormattedText("Текст с шестой по десятую секунду")
+                }
             }));
 
             this.DataContext = subtitleView;

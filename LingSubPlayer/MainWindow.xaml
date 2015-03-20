@@ -4,8 +4,13 @@
         xmlns:wpf="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
         xmlns:core="clr-namespace:LingSubPlayer.Wpf.Core;assembly=LingSubPlayer.Wpf.Core"
         xmlns:controls="clr-namespace:LingSubPlayer.Wpf.Core.Controls;assembly=LingSubPlayer.Wpf.Core"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:viewModel="clr-namespace:LingSubPlayer.Wpf.Core.ViewModel;assembly=LingSubPlayer.Wpf.Core"
         Title="LingSubPlayer" Height="350" Width="525"
-        Background="Black">
+        Background="Black"
+        d:DataContext="{d:DesignInstance Type=viewModel:CurrentSubtitleView}">
     
     <Window.CommandBindings>
         <CommandBinding Command="TogglePlayPause" Executed="TogglePlayPauseExecuted"></CommandBinding>
@@ -44,9 +49,7 @@
 
             <Viewbox DockPanel.Dock="Bottom" Style="{StaticResource TranslatedSubtitlesViewbox}">
                 <Border>
-                    <TextBlock>
-                        Это какой-то текст на другом языке, который даёт представление о том, как будет выглядеть перевод
-                    </TextBlock>
+                    <TextBlock Text="{Binding TranslatedText}" />
                 </Border>
             </Viewbox>
         </DockPanel>

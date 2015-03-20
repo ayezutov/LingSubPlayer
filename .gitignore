@@ -156,3 +156,5 @@ $RECYCLE.BIN/
 .DS_Store
 /experiments
 /data
+/packages
+/vlc
