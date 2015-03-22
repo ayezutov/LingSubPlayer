@@ -1,32 +1,33 @@
 ﻿<Window x:Class="LingSubPlayer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:wpf="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
         xmlns:core="clr-namespace:LingSubPlayer.Wpf.Core;assembly=LingSubPlayer.Wpf.Core"
         xmlns:controls="clr-namespace:LingSubPlayer.Wpf.Core.Controls;assembly=LingSubPlayer.Wpf.Core"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:viewModel="clr-namespace:LingSubPlayer.Wpf.Core.ViewModel;assembly=LingSubPlayer.Wpf.Core"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:lingSubPlayer="clr-namespace:LingSubPlayer"
         Title="LingSubPlayer" Height="350" Width="525"
         Background="Black"
         d:DataContext="{d:DesignInstance Type=viewModel:CurrentSubtitleView}">
-    
+
     <Window.CommandBindings>
         <CommandBinding Command="TogglePlayPause" Executed="TogglePlayPauseExecuted"></CommandBinding>
         <CommandBinding Command="core:Commands.ToSubtitleNextBlockBeginning" Executed="ToSubtitleNextBlockBeginningExecuted"></CommandBinding>
         <CommandBinding Command="core:Commands.ToSubtitlePreviousBlockBeginning" Executed="ToSubtitlePreviousBlockBeginningExecuted"></CommandBinding>
     </Window.CommandBindings>
-    
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="LingSubPlayerResourceDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="LingSubPlayerResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    
     <Grid>
+
         <controls:VlcDependencyControl x:Name="VlcControl" />
 
         <Grid Grid.Row="0">
@@ -53,14 +54,14 @@
                 </Border>
             </Viewbox>
         </DockPanel>
-        
-        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LastChildFill="False">
+
+        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LastChildFill="False" IsEnabled="{Binding ElementName=ModalWindowContainer, Path=IsModalChildVisible, Converter={StaticResource InverseBoolConverter}}">
             <StackPanel DockPanel.Dock="Bottom"  x:Name="ControlPanel" Style="{StaticResource ControlPanel}" Height="{StaticResource ControlBarHeight}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button>&lt;- CC</Button>
                     <Button Command="TogglePlayPause">Play/Pause</Button>
                     <Button>CC -&gt;</Button>
-                    <TextBlock Foreground="White" Text="{Binding ElementName=VlcControl, Path=Time}"></TextBlock>
+                    <TextBlock Foreground="White" Text='{Binding ElementName=VlcControl, Path=Time, StringFormat="hh\\:mm\\:ss"}'></TextBlock>
                 </StackPanel>
             </StackPanel>
             <ProgressBar DockPanel.Dock="Bottom" Height="{StaticResource ProgressBarHeightExpanded }" x:Name="Timeline"
@@ -68,28 +69,27 @@
                          Value="{Binding ElementName=VlcControl, Path=Time, Converter={StaticResource TimeSpanToDoubleConverter}}"
                          MouseDoubleClick="Control_OnMouseDoubleClick">
             </ProgressBar>
-            
+
         </DockPanel>
-        
-        
+
+        <controls:WindowContainer ModalBackgroundBrush="#A6252525" x:Name="ModalWindowContainer">
+            <xctk:ChildWindow x:Name="SomeChildWindow" IsModal="True" Style="{StaticResource ChildWindowStyle}"
+                              WindowStyle="SingleBorderWindow" Caption="Normal Window">
+                <Grid>
+                    <TextBlock> Some text </TextBlock>
+                </Grid>
+            </xctk:ChildWindow>
+            
+            <xctk:ChildWindow x:Name="SomeOtherChildWindow" IsModal="True" Style="{StaticResource ChildWindowStyle}"
+                              WindowStyle="ToolWindow" WindowStartupLocation="Manual" Caption="Tool Window">
+                <Grid>
+                    <TextBlock> Some  other text </TextBlock>
+                </Grid>
+            </xctk:ChildWindow>
+            <xctk:ChildWindow x:Name="abc" IsModal="True" Style="{StaticResource ChildWindowStyle}">
+                <lingSubPlayer:OpenFileDialog />
+            </xctk:ChildWindow>
+
+        </controls:WindowContainer>
     </Grid>
-    
-    <Window.Triggers>
-<!--        <EventTrigger RoutedEvent="DockPanel.MouseMove">-->
-<!--            <EventTrigger.Actions>-->
-<!--                <BeginStoryboard>-->
-<!--                    <Storyboard TargetName="ControlPanel" TargetProperty="Height">-->
-<!--                        <DoubleAnimation To="20" Duration="00:00:00.10"></DoubleAnimation>-->
-<!--                        <DoubleAnimation To="0" BeginTime="00:00:03"></DoubleAnimation>-->
-<!--                    </Storyboard>-->
-<!--                </BeginStoryboard>-->
-<!--                <BeginStoryboard>-->
-<!--                    <Storyboard TargetName="Timeline" TargetProperty="Height">-->
-<!--                        <DoubleAnimation To="{StaticResource ProgressBarHeightExpanded}" Duration="00:00:00.10"></DoubleAnimation>-->
-<!--                        <DoubleAnimation To="{StaticResource ProgressBarHeightCollapsed}" BeginTime="00:00:03"></DoubleAnimation>-->
-<!--                    </Storyboard>-->
-<!--                </BeginStoryboard>-->
-<!--            </EventTrigger.Actions>-->
-<!--        </EventTrigger>-->
-    </Window.Triggers>
 </Window>

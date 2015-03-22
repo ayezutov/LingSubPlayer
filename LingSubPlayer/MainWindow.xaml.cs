@@ -1,12 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using LingSubPlayer.Common.Subtitles.Data;
-using LingSubPlayer.Wpf.Core.Controls;
 using LingSubPlayer.Wpf.Core.ViewModel;
 using Vlc.DotNet.Core;
 using Vlc.DotNet.Core.Medias;
@@ -29,7 +27,8 @@ namespace LingSubPlayer
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             VlcControl.Media = new PathMedia(@"..\..\..\data\cartoon.flv");
-            VlcControl.Play();
+            VlcControl.Stop();
+            //            VlcControl.Play();
 
 
             var subtitleView = new CurrentSubtitleView(new VideoSubtitleCollection(new[]
@@ -67,10 +66,11 @@ namespace LingSubPlayer
 
             var binding = new Binding {Source = VlcControl, Path = new PropertyPath("Time"), Mode = BindingMode.OneWay};
             BindingOperations.SetBinding(subtitleView, CurrentSubtitleView.PositionProperty, binding);
-            //Task.Delay(200).ContinueWith((t) => { VlcControl.AudioProperties.IsMute = true; });
+            abc.Show();
+            SomeChildWindow.Show();
+            SomeOtherChildWindow.Show();
+            //def.Visibility = Visibility.Visible;
         }
-
-        
 
         private void WindowClosing(object sender, CancelEventArgs e)
         {
