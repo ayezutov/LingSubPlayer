@@ -9,8 +9,9 @@
         xmlns:viewModel="clr-namespace:LingSubPlayer.Wpf.Core.ViewModel;assembly=LingSubPlayer.Wpf.Core"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:lingSubPlayer="clr-namespace:LingSubPlayer"
-        Title="LingSubPlayer" Height="350" Width="525"
+        Title="LingSubPlayer" Height="364" Width="576"
         Background="Black"
+        SnapsToDevicePixels="True"
         d:DataContext="{d:DesignInstance Type=viewModel:CurrentSubtitleView}">
 
     <Window.CommandBindings>
@@ -18,14 +19,6 @@
         <CommandBinding Command="core:Commands.ToSubtitleNextBlockBeginning" Executed="ToSubtitleNextBlockBeginningExecuted"></CommandBinding>
         <CommandBinding Command="core:Commands.ToSubtitlePreviousBlockBeginning" Executed="ToSubtitlePreviousBlockBeginningExecuted"></CommandBinding>
     </Window.CommandBindings>
-
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="LingSubPlayerResourceDictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Grid>
 
         <controls:VlcDependencyControl x:Name="VlcControl" />
@@ -74,20 +67,20 @@
 
         <controls:WindowContainer ModalBackgroundBrush="#A6252525" x:Name="ModalWindowContainer">
             <xctk:ChildWindow x:Name="SomeChildWindow" IsModal="True" Style="{StaticResource ChildWindowStyle}"
-                              WindowStyle="SingleBorderWindow" Caption="Normal Window">
+                              WindowStyle="SingleBorderWindow" Caption="Normal Window" Visibility="Collapsed">
                 <Grid>
-                    <TextBlock> Some text </TextBlock>
+                    <TextBlock> Some text</TextBlock>
                 </Grid>
             </xctk:ChildWindow>
-            
+
             <xctk:ChildWindow x:Name="SomeOtherChildWindow" IsModal="True" Style="{StaticResource ChildWindowStyle}"
-                              WindowStyle="ToolWindow" WindowStartupLocation="Manual" Caption="Tool Window">
+                              WindowStyle="ToolWindow" WindowStartupLocation="Manual" Caption="Tool Window" Visibility="Collapsed">
                 <Grid>
-                    <TextBlock> Some  other text </TextBlock>
+                    <TextBlock> Some  other text</TextBlock>
                 </Grid>
             </xctk:ChildWindow>
             <xctk:ChildWindow x:Name="abc" IsModal="True" Style="{StaticResource ChildWindowStyle}">
-                <lingSubPlayer:OpenFileDialog />
+                <lingSubPlayer:OpenFileDialog Width="500" />
             </xctk:ChildWindow>
 
         </controls:WindowContainer>

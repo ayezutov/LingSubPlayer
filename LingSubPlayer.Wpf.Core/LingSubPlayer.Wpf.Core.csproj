@@ -58,6 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands.cs" />
+    <Compile Include="Controls\TextBoxWithButton.xaml.cs">
+      <DependentUpon>TextBoxWithButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\VlcDependencyControl.cs" />
     <Compile Include="Controls\WindowContainer.cs" />
     <Compile Include="Converters\TimeSpanToDoubleConverter.cs" />
@@ -70,6 +73,12 @@
       <Project>{9a54737c-b098-4c43-88bb-0c71790ee47b}</Project>
       <Name>LingSubPlayer.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\TextBoxWithButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

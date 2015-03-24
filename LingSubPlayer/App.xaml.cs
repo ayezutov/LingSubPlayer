@@ -23,6 +23,8 @@ namespace LingSubPlayer
         {
             VlcContextInitialize();
 
+            
+
             var containerBuilder = new ContainerBuilder();
             containerBuilder
                 .RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
@@ -33,8 +35,8 @@ namespace LingSubPlayer
 
             using (var scope = container.BeginLifetimeScope())
             {
-
-                App app = scope.Resolve<App>();
+                var app = scope.Resolve<App>();
+                app.InitializeComponent();
                 app.Run(scope.Resolve<MainWindow>());
             }
         }

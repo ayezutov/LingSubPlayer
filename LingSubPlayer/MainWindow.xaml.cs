@@ -23,9 +23,10 @@ namespace LingSubPlayer
             Closing += WindowClosing;
             Loaded += WindowLoaded;
         }
-
+        
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+
             VlcControl.Media = new PathMedia(@"..\..\..\data\cartoon.flv");
             VlcControl.Stop();
             //            VlcControl.Play();
@@ -67,8 +68,8 @@ namespace LingSubPlayer
             var binding = new Binding {Source = VlcControl, Path = new PropertyPath("Time"), Mode = BindingMode.OneWay};
             BindingOperations.SetBinding(subtitleView, CurrentSubtitleView.PositionProperty, binding);
             abc.Show();
-            SomeChildWindow.Show();
-            SomeOtherChildWindow.Show();
+//            SomeChildWindow.Show();
+//            SomeOtherChildWindow.Show();
             //def.Visibility = Visibility.Visible;
         }
 
