@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="20" d:DesignWidth="300">
     <DockPanel>
-        <Button DockPanel.Dock="Right" Margin="2,1,0,2" Padding="4,0">...</Button>
-        <TextBox></TextBox>
+        <Button DockPanel.Dock="Right" Margin="2,1,0,2" Padding="4,0" Click="BrowseClick">...</Button>
+        <TextBox x:Name="FilePath"></TextBox>
     </DockPanel>
 </UserControl>

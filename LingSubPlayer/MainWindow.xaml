@@ -59,30 +59,15 @@
             </StackPanel>
             <ProgressBar DockPanel.Dock="Bottom" Height="{StaticResource ProgressBarHeightExpanded }" x:Name="Timeline"
                          Maximum="{Binding ElementName=VlcControl, Path=Duration, Converter={StaticResource TimeSpanToDoubleConverter}}"
-                         Value="{Binding ElementName=VlcControl, Path=Time, Converter={StaticResource TimeSpanToDoubleConverter}}"
-                         MouseDoubleClick="Control_OnMouseDoubleClick">
+                         Value="{Binding ElementName=VlcControl, Path=Time, Converter={StaticResource TimeSpanToDoubleConverter}}">
             </ProgressBar>
 
         </DockPanel>
 
         <controls:WindowContainer ModalBackgroundBrush="#A6252525" x:Name="ModalWindowContainer">
-            <xctk:ChildWindow x:Name="SomeChildWindow" IsModal="True" Style="{StaticResource ChildWindowStyle}"
-                              WindowStyle="SingleBorderWindow" Caption="Normal Window" Visibility="Collapsed">
-                <Grid>
-                    <TextBlock> Some text</TextBlock>
-                </Grid>
-            </xctk:ChildWindow>
-
-            <xctk:ChildWindow x:Name="SomeOtherChildWindow" IsModal="True" Style="{StaticResource ChildWindowStyle}"
-                              WindowStyle="ToolWindow" WindowStartupLocation="Manual" Caption="Tool Window" Visibility="Collapsed">
-                <Grid>
-                    <TextBlock> Some  other text</TextBlock>
-                </Grid>
-            </xctk:ChildWindow>
-            <xctk:ChildWindow x:Name="abc" IsModal="True" Style="{StaticResource ChildWindowStyle}">
-                <lingSubPlayer:OpenFileDialog Width="500" />
-            </xctk:ChildWindow>
-
+<!--            <xctk:ChildWindow x:Name="OpenNewFileWindow" IsModal="True" Style="{StaticResource ChildWindowStyle}">-->
+<!--                <lingSubPlayer:OpenFileDialog Width="500" />-->
+<!--            </xctk:ChildWindow>-->
         </controls:WindowContainer>
     </Grid>
 </Window>

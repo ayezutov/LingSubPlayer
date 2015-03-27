@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:LingSubPlayer.Wpf.Core.Converters;assembly=LingSubPlayer.Wpf.Core"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
-                    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">
+                    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+                    xmlns:controls="clr-namespace:LingSubPlayer.Wpf.Core.Controls;assembly=LingSubPlayer.Wpf.Core">
     
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="WindowControlStyles.xaml"></ResourceDictionary>
@@ -113,6 +114,26 @@
                 <Setter Property="WindowInactiveBackground" Value="Transparent" />
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type controls:TextBoxWithButton}">
+        <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="true">
+                        <Border Background="Red" DockPanel.Dock="Right" Margin="4,0,0,0" Width="14" Height="14" CornerRadius="7"
+                                    ToolTip="{Binding ElementName=customAdorner, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}">
+                            <TextBlock Text="!" FontSize="12" VerticalAlignment="center" HorizontalAlignment="center" FontWeight="Bold" Foreground="white">
+                            </TextBlock>
+                        </Border>
+                        <AdornedElementPlaceholder Name="customAdorner" VerticalAlignment="Center" >
+                            <Border BorderBrush="Red" BorderThickness="1" Margin="-2" />
+                        </AdornedElementPlaceholder>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

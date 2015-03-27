@@ -2,8 +2,14 @@
 using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using Autofac;
+using LingSubPlayer.Common;
+using LingSubPlayer.Wpf.Core;
+using LingSubPlayer.Wpf.Core.Annotations;
+using LingSubPlayer.Wpf.Core.Controllers;
 using Vlc.DotNet.Core;
 
 namespace LingSubPlayer
@@ -17,38 +23,46 @@ namespace LingSubPlayer
         /// Application Entry Point.
         /// </summary>
         [STAThread]
-        [DebuggerNonUserCode]
-        [GeneratedCode("PresentationBuildTasks", "4.0.0.0")]
         public static void Main()
         {
-            VlcContextInitialize();
-
-            
+            var assemblies = new[]
+            {
+                typeof(App).Assembly, //LingSubPlayer
+                typeof(CanBeNullAttribute).Assembly, //LingSubPlayer.Common
+                typeof(Commands).Assembly, // LingSubPlayer.Wpf.Core
+            };
 
             var containerBuilder = new ContainerBuilder();
+
             containerBuilder
-                .RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
+                .RegisterAssemblyTypes(assemblies)
+                .Where(t => !t.IsAssignableTo(typeof(IView<>)) && !t.FullName.StartsWith("LingSubPlayer.Wpf.Core.Controllers"))
                 .AsImplementedInterfaces()
                 .AsSelf();
 
+            containerBuilder
+                .RegisterAssemblyTypes(assemblies)
+                .Where(t => t.IsAssignableTo(typeof (IView<>)))
+                .AsImplementedInterfaces()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+
+            containerBuilder
+                .RegisterAssemblyTypes(assemblies)
+                .Where(t => t.FullName.StartsWith("LingSubPlayer.Wpf.Core.Controllers"))
+                .AsSelf()
+                .InstancePerLifetimeScope();
+            
             var container = containerBuilder.Build();
 
             using (var scope = container.BeginLifetimeScope())
             {
+                MainController.InitializeApplication();
+                
                 var app = scope.Resolve<App>();
                 app.InitializeComponent();
-                app.Run(scope.Resolve<MainWindow>());
+                var mainController = scope.Resolve<MainController>();
+                app.Run(mainController.View as Window);
             }
-        }
-
-        private static void VlcContextInitialize()
-        {
-            var vlcBaseDirectory = new DirectoryInfo(Path.Combine(@"..\..\..\vlc", Environment.Is64BitProcess ? "x64" : "x86"));
-
-            VlcContext.LibVlcDllsPath = vlcBaseDirectory.FullName;
-            VlcContext.LibVlcPluginsPath = Path.Combine(vlcBaseDirectory.FullName, "plugins");
-            VlcContext.StartupOptions.ScreenSaverEnabled = false;
-            VlcContext.Initialize();
         }
     }
 }

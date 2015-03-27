@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Autofac;
 using LingSubPlayer.Common.Subtitles;
 using LingSubPlayer.Common.Subtitles.Data;
@@ -36,14 +37,17 @@ namespace LingSubPlayer.Common.Tests.Subtitles
 00:00:13,313 --> 00:00:15,645
 Good luck with that, Your Honor.";
 
-            var result = utils.Container.Resolve<SrtSubtitlesParser>().Parse(data);
+            using (var stream = GetStream(data))
+            {
+                var result = utils.Container.Resolve<SrtSubtitlesParser>().Parse(stream);
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count, Is.EqualTo(1));
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count, Is.EqualTo(1));
 
-            Assert.That(result.Subtitles[0].StartTime, Is.EqualTo(TimeSpan.FromSeconds(13.313)));
-            Assert.That(result.Subtitles[0].EndTime, Is.EqualTo(TimeSpan.FromSeconds(15.645)));
-            Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo("Good luck with that, Your Honor."));
+                Assert.That(result.Subtitles[0].StartTime, Is.EqualTo(TimeSpan.FromSeconds(13.313)));
+                Assert.That(result.Subtitles[0].EndTime, Is.EqualTo(TimeSpan.FromSeconds(15.645)));
+                Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo("Good luck with that, Your Honor."));
+            }
         }
 
         [Test]
@@ -53,12 +57,14 @@ Good luck with that, Your Honor.";
 00:00:13,313 --> 00:00:15,645
 Good luck with that,
 Your Honor.";
+            using (var stream = GetStream(data))
+            {
+                var result = utils.Container.Resolve<SrtSubtitlesParser>().Parse(stream);
 
-            var result = utils.Container.Resolve<SrtSubtitlesParser>().Parse(data);
-
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count, Is.EqualTo(1));
-            Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo("Good luck with that,\r\nYour Honor."));
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count, Is.EqualTo(1));
+                Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo("Good luck with that,\r\nYour Honor."));
+            }
         }
 
         [Test]
@@ -71,17 +77,19 @@ First.
 6
 00:00:23,313 --> 00:00:25,645
 Second.";
+            using (var stream = GetStream(data))
+            {
+                var result = utils.Container.Resolve<SrtSubtitlesParser>().Parse(stream);
 
-            var result = utils.Container.Resolve<SrtSubtitlesParser>().Parse(data);
-
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count, Is.EqualTo(2));
-            Assert.That(result.Subtitles[0].StartTime, Is.EqualTo(TimeSpan.FromSeconds(13.313)));
-            Assert.That(result.Subtitles[0].EndTime, Is.EqualTo(TimeSpan.FromSeconds(15.645)));
-            Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo("First."));
-            Assert.That(result.Subtitles[1].StartTime, Is.EqualTo(TimeSpan.FromSeconds(23.313)));
-            Assert.That(result.Subtitles[1].EndTime, Is.EqualTo(TimeSpan.FromSeconds(25.645)));
-            Assert.That(result.Subtitles[1].Value.ToString(), Is.EqualTo("Second."));
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count, Is.EqualTo(2));
+                Assert.That(result.Subtitles[0].StartTime, Is.EqualTo(TimeSpan.FromSeconds(13.313)));
+                Assert.That(result.Subtitles[0].EndTime, Is.EqualTo(TimeSpan.FromSeconds(15.645)));
+                Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo("First."));
+                Assert.That(result.Subtitles[1].StartTime, Is.EqualTo(TimeSpan.FromSeconds(23.313)));
+                Assert.That(result.Subtitles[1].EndTime, Is.EqualTo(TimeSpan.FromSeconds(25.645)));
+                Assert.That(result.Subtitles[1].Value.ToString(), Is.EqualTo("Second."));
+            }
         }
 
         [Test]
@@ -93,14 +101,18 @@ First.
 6
 00:00:23,313 --> 00:00:25,645
 Second.";
+            using (var stream = GetStream(data))
+            {
+                var result = utils.Container.Resolve<SrtSubtitlesParser>().Parse(stream);
 
-            var result = utils.Container.Resolve<SrtSubtitlesParser>().Parse(data);
-
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count, Is.EqualTo(1));
-            Assert.That(result.Subtitles[0].StartTime, Is.EqualTo(TimeSpan.FromSeconds(13.313)));
-            Assert.That(result.Subtitles[0].EndTime, Is.EqualTo(TimeSpan.FromSeconds(15.645)));
-            Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo(string.Format(@"First.{0}6{0}00:00:23,313 --> 00:00:25,645{0}Second.", Environment.NewLine)));
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count, Is.EqualTo(1));
+                Assert.That(result.Subtitles[0].StartTime, Is.EqualTo(TimeSpan.FromSeconds(13.313)));
+                Assert.That(result.Subtitles[0].EndTime, Is.EqualTo(TimeSpan.FromSeconds(15.645)));
+                Assert.That(result.Subtitles[0].Value.ToString(),
+                    Is.EqualTo(string.Format(@"First.{0}6{0}00:00:23,313 --> 00:00:25,645{0}Second.",
+                        Environment.NewLine)));
+            }
         }
 
         [Test]
@@ -112,11 +124,15 @@ First.
 
 6
 Second.";
+            using (var stream = GetStream(data))
+            {
+                var ex =
+                    Assert.Throws<SubtitlesParserException>(
+                        () => utils.Container.Resolve<SrtSubtitlesParser>().Parse(stream));
 
-            var ex = Assert.Throws<SubtitlesParserException>(()=> utils.Container.Resolve<SrtSubtitlesParser>().Parse(data));
-
-            Assert.That(ex.Message, Contains.Substring("block #2"));
-            Assert.That(ex.Message, Contains.Substring("not a supported time notation"));
+                Assert.That(ex.Message, Contains.Substring("block #2"));
+                Assert.That(ex.Message, Contains.Substring("not a supported time notation"));
+            }
         }
 
         [Test]
@@ -128,11 +144,15 @@ First.
 
 00:00:23,313 --> 00:00:25,645
 Second.";
+            using (var stream = GetStream(data))
+            {
+                var ex =
+                    Assert.Throws<SubtitlesParserException>(
+                        () => utils.Container.Resolve<SrtSubtitlesParser>().Parse(stream));
 
-            var ex = Assert.Throws<SubtitlesParserException>(()=> utils.Container.Resolve<SrtSubtitlesParser>().Parse(data));
-
-            Assert.That(ex.Message, Contains.Substring("block #2"));
-            Assert.That(ex.Message, Contains.Substring("is not block beginning"));
+                Assert.That(ex.Message, Contains.Substring("block #2"));
+                Assert.That(ex.Message, Contains.Substring("is not block beginning"));
+            }
         }
 
         [Test]
@@ -144,11 +164,108 @@ Second.";
 6
 00:00:23,313 --> 00:00:25,645
 Second.";
+            using (var stream = GetStream(data))
+            {
+                var ex =
+                    Assert.Throws<SubtitlesParserException>(
+                        () => utils.Container.Resolve<SrtSubtitlesParser>().Parse(stream));
 
-            var ex = Assert.Throws<SubtitlesParserException>(()=> utils.Container.Resolve<SrtSubtitlesParser>().Parse(data));
+                Assert.That(ex.Message, Contains.Substring("block #1"));
+                Assert.That(ex.Message, Contains.Substring("no text was found"));
+            }
+        }
 
-            Assert.That(ex.Message, Contains.Substring("block #1"));
-            Assert.That(ex.Message, Contains.Substring("no text was found"));
+        [Test]
+        public void VerifyMultipleSeparatorLinesInTheMiddleDoNotBreakProcessing()
+        {
+            const string data = @"5
+00:00:13,313 --> 00:00:15,645
+First
+
+
+
+6
+00:00:23,313 --> 00:00:25,645
+Second.";
+            using (var stream = GetStream(data))
+            {
+                var result = utils.Container.Resolve<SrtSubtitlesParser>().Parse(stream);
+
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count, Is.EqualTo(2));
+                Assert.That(result.Subtitles[0].StartTime, Is.EqualTo(TimeSpan.FromSeconds(13.313)));
+                Assert.That(result.Subtitles[0].EndTime, Is.EqualTo(TimeSpan.FromSeconds(15.645)));
+                Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo("First"));
+                Assert.That(result.Subtitles[1].StartTime, Is.EqualTo(TimeSpan.FromSeconds(23.313)));
+                Assert.That(result.Subtitles[1].EndTime, Is.EqualTo(TimeSpan.FromSeconds(25.645)));
+                Assert.That(result.Subtitles[1].Value.ToString(), Is.EqualTo("Second."));
+            }
+        }
+
+        [Test]
+        public void VerifyMultipleSeparatorLinesInTheEndDoNotBreakProcessing()
+        {
+            const string data = @"5
+00:00:13,313 --> 00:00:15,645
+First
+
+6
+00:00:23,313 --> 00:00:25,645
+Second.
+
+
+";
+            using (var stream = GetStream(data))
+            {
+                var result = utils.Container.Resolve<SrtSubtitlesParser>().Parse(stream);
+
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count, Is.EqualTo(2));
+                Assert.That(result.Subtitles[0].StartTime, Is.EqualTo(TimeSpan.FromSeconds(13.313)));
+                Assert.That(result.Subtitles[0].EndTime, Is.EqualTo(TimeSpan.FromSeconds(15.645)));
+                Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo("First"));
+                Assert.That(result.Subtitles[1].StartTime, Is.EqualTo(TimeSpan.FromSeconds(23.313)));
+                Assert.That(result.Subtitles[1].EndTime, Is.EqualTo(TimeSpan.FromSeconds(25.645)));
+                Assert.That(result.Subtitles[1].Value.ToString(), Is.EqualTo("Second."));
+            }
+        }
+
+        [Test]
+        public void VerifyMultipleSeparatorLinesInTheBeginningDoNotBreakProcessing()
+        {
+            const string data = @"
+
+
+5
+00:00:13,313 --> 00:00:15,645
+First
+
+6
+00:00:23,313 --> 00:00:25,645
+Second.";
+            using (var stream = GetStream(data))
+            {
+                var result = utils.Container.Resolve<SrtSubtitlesParser>().Parse(stream);
+
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count, Is.EqualTo(2));
+                Assert.That(result.Subtitles[0].StartTime, Is.EqualTo(TimeSpan.FromSeconds(13.313)));
+                Assert.That(result.Subtitles[0].EndTime, Is.EqualTo(TimeSpan.FromSeconds(15.645)));
+                Assert.That(result.Subtitles[0].Value.ToString(), Is.EqualTo("First"));
+                Assert.That(result.Subtitles[1].StartTime, Is.EqualTo(TimeSpan.FromSeconds(23.313)));
+                Assert.That(result.Subtitles[1].EndTime, Is.EqualTo(TimeSpan.FromSeconds(25.645)));
+                Assert.That(result.Subtitles[1].Value.ToString(), Is.EqualTo("Second."));
+            }
+        }
+
+        private Stream GetStream(string text)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(text);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
     }
 }

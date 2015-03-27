@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.Primitives;
+using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
+using WindowStartupLocation = Xceed.Wpf.Toolkit.WindowStartupLocation;
+using WindowState = Xceed.Wpf.Toolkit.WindowState;
 
 namespace LingSubPlayer.Wpf.Core.Controls
 {
@@ -20,7 +26,7 @@ namespace LingSubPlayer.Wpf.Core.Controls
         {
             foreach (WindowControl windowControl in Children)
             {
-                if (windowControl is Xceed.Wpf.Toolkit.MessageBox && windowControl.Left == 0.0 && windowControl.Top == 0.0 || windowControl is ChildWindow && ((ChildWindow)windowControl).WindowStartupLocation == Xceed.Wpf.Toolkit.WindowStartupLocation.Center)
+                if (windowControl is MessageBox && windowControl.Left == 0.0 && windowControl.Top == 0.0 || windowControl is ChildWindow && ((ChildWindow)windowControl).WindowStartupLocation == WindowStartupLocation.Center)
                 {
                     CenterChild(windowControl);
                 }
@@ -108,6 +114,73 @@ namespace LingSubPlayer.Wpf.Core.Controls
             {
                 IsModalChildVisible = (bool) f.GetValue(this);
             }
+        }
+
+        public Task ShowWindow(ChildWindow childWindow)
+        {
+            TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
+            DependencyPropertyChangedEventHandler windowControlOnIsVisibleChanged = null;
+
+            windowControlOnIsVisibleChanged = (sender, args) =>
+            {
+                if (childWindow.WindowState != WindowState.Open)
+                {
+                    taskCompletionSource.SetResult(true);
+                    childWindow.IsVisibleChanged -= windowControlOnIsVisibleChanged;
+                }
+            };
+
+            childWindow.IsVisibleChanged += windowControlOnIsVisibleChanged;
+
+            Dispatcher.Invoke(childWindow.Show);
+
+            return taskCompletionSource.Task;
+        }
+
+        public static void CloseCurrentWindow(DependencyObject element, bool? dialogResult = null)
+        {
+            while (element != null)
+            {
+                var childWindow = element as ChildWindow;
+                if (childWindow != null)
+                {
+                    childWindow.Close();
+                    childWindow.DialogResult = dialogResult;
+                }
+
+                element = VisualTreeHelper.GetParent(element);
+            }
+        }
+
+        public Task ShowControlAsWindow(Control openFileDialog, WindowParameters parameters = null)
+        {
+            var window = new ChildWindow
+            {
+                Content = openFileDialog,
+                IsModal = true
+            };
+
+            if (parameters != null)
+            {
+                window.WindowStyle = parameters.WindowStyle;
+                window.Style = parameters.Style;
+                window.Width = parameters.Width ?? window.Width;
+                window.Height = parameters.Height ?? window.Height;
+            }
+
+            if (!Children.Contains(window))
+            {
+                Children.Add(window);
+            }
+
+            var task = ShowWindow(window);
+
+            task.ContinueWith(t =>
+            {
+                Dispatcher.Invoke(() => Children.Remove(window));
+            });
+
+            return task;
         }
     }
 }

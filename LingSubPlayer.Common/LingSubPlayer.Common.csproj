@@ -39,12 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExpressionHelper.cs" />
+    <Compile Include="Data\SessionData.cs" />
+    <Compile Include="ReflectionHelpers.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Subtitles\Data\FormattedText.cs" />
     <Compile Include="Subtitles\FormattedTextParser.cs" />
     <Compile Include="Subtitles\IFormattedTextParser.cs" />
     <Compile Include="Subtitles\Data\Rect.cs" />
+    <Compile Include="Subtitles\ISubtitlesParser.cs" />
     <Compile Include="Subtitles\SrtFileLineDescriptor.cs" />
     <Compile Include="Subtitles\Data\SrtFileTimeAndPositionLine.cs" />
     <Compile Include="Subtitles\SrtFileTimeAndPositionLineParser.cs" />

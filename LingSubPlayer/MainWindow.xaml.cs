@@ -1,10 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using LingSubPlayer.Common.Subtitles.Data;
+using Autofac;
+using LingSubPlayer.Common.Data;
+using LingSubPlayer.Wpf.Core.Controllers;
+using LingSubPlayer.Wpf.Core.Controls;
 using LingSubPlayer.Wpf.Core.ViewModel;
 using Vlc.DotNet.Core;
 using Vlc.DotNet.Core.Medias;
@@ -14,63 +18,26 @@ namespace LingSubPlayer
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IMainView<MainController>
     {
-        public MainWindow()
+        private readonly ILifetimeScope container;
+
+        // Using property injection, as circular references are 
+        // not supported via constructor injection by Autofac
+        public MainController Controller { get; set; }
+
+        public MainWindow(ILifetimeScope container)
         {
+            this.container = container;
             InitializeComponent();
 
             Closing += WindowClosing;
             Loaded += WindowLoaded;
         }
-        
+
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-
-            VlcControl.Media = new PathMedia(@"..\..\..\data\cartoon.flv");
-            VlcControl.Stop();
-            //            VlcControl.Play();
-
-
-            var subtitleView = new CurrentSubtitleView(new VideoSubtitleCollection(new[]
-            {
-                new VideoSubtitlesRecord
-                {
-                    StartTime = TimeSpan.Parse("00:00:01.000"),
-                    EndTime = TimeSpan.Parse("00:00:04.000"),
-                    Value = new FormattedText("Text from first to fourth second")
-                },
-                new VideoSubtitlesRecord
-                {
-                    StartTime = TimeSpan.Parse("00:00:06.001"),
-                    EndTime = TimeSpan.Parse("00:00:10.000"),
-                    Value = new FormattedText("Text from sixth to tenth second")
-                }
-            }),
-            new VideoSubtitleCollection(new[]
-            {
-                new VideoSubtitlesRecord
-                {
-                    StartTime = TimeSpan.Parse("00:00:01.000"),
-                    EndTime = TimeSpan.Parse("00:00:04.000"),
-                    Value = new FormattedText("Текст с первой по четвёртую секунду")
-                },
-                new VideoSubtitlesRecord
-                {
-                    StartTime = TimeSpan.Parse("00:00:06.001"),
-                    EndTime = TimeSpan.Parse("00:00:10.000"),
-                    Value = new FormattedText("Текст с шестой по десятую секунду")
-                }
-            }));
-
-            this.DataContext = subtitleView;
-
-            var binding = new Binding {Source = VlcControl, Path = new PropertyPath("Time"), Mode = BindingMode.OneWay};
-            BindingOperations.SetBinding(subtitleView, CurrentSubtitleView.PositionProperty, binding);
-            abc.Show();
-//            SomeChildWindow.Show();
-//            SomeOtherChildWindow.Show();
-            //def.Visibility = Visibility.Visible;
+            Controller.OnLoad();
         }
 
         private void WindowClosing(object sender, CancelEventArgs e)
@@ -91,6 +58,37 @@ namespace LingSubPlayer
             }
         }
 
+        public async Task<SessionData> ShowOpenVideoFileDialog()
+        {
+            var controller = container.Resolve<OpenFileDialogController>();
+            var openFileDialog = controller.View as OpenFileDialog;
+            openFileDialog.SessionData = new SessionData();
+            openFileDialog.CanCancel = false;
+            await ModalWindowContainer.ShowControlAsWindow(openFileDialog, new WindowParameters
+            {
+                WindowStyle = WindowStyle.None,
+                Style = ChildWindowStyle,
+                Width = 500
+            });
+            return openFileDialog.SessionData;
+        }
+
+        public void PlayFile(string videoFileName, CurrentSubtitleView subtitles)
+        {
+            DataContext = subtitles;
+
+            var binding = new Binding { Source = VlcControl, Path = new PropertyPath("Time"), Mode = BindingMode.OneWay };
+            BindingOperations.SetBinding(subtitles, CurrentSubtitleView.PositionProperty, binding);
+
+            VlcControl.Media = new PathMedia(videoFileName);
+            VlcControl.Play();
+        }
+
+        private Style ChildWindowStyle
+        {
+            get { return FindResource("ChildWindowStyle") as Style; }
+        }
+
         private void ToSubtitleNextBlockBeginningExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             throw new NotImplementedException();
@@ -99,11 +97,6 @@ namespace LingSubPlayer
         private void ToSubtitlePreviousBlockBeginningExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             throw new NotImplementedException();
-        }
-
-        private void Control_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-
         }
 
         private void TextBlockMouseDown(object sender, MouseButtonEventArgs e)

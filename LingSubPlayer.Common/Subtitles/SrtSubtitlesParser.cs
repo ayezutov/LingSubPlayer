@@ -6,7 +6,7 @@ using LingSubPlayer.Common.Subtitles.Data;
 
 namespace LingSubPlayer.Common.Subtitles
 {
-    public class SrtSubtitlesParser
+    public class SrtSubtitlesParser : ISubtitlesParser
     {
         private readonly IFormattedTextParser formattedTextParser;
 
@@ -16,14 +16,14 @@ namespace LingSubPlayer.Common.Subtitles
         }
 
         private SrtParserState state;
-
+        
         /// <summary>
         /// Parses SRT (SubRip) file and returns <see cref="VideoSubtitleCollection"/>
         /// </summary>
         /// <param name="data">The string containing subtitles</param>
         /// <returns>Parsed collection of subtitles (<see cref="VideoSubtitleCollection"/>)</returns>
         /// <exception cref="SubtitlesParserException">Is thrown when the format of data is invalid</exception>
-        public VideoSubtitleCollection Parse(string data)
+        public VideoSubtitleCollection Parse(Stream data)
         {
             try
             {
@@ -34,7 +34,9 @@ namespace LingSubPlayer.Common.Subtitles
                     throw new NotSupportedException("Current SRT parser is in use.");
                 }
 
-                using (var reader = new StringReader(data))
+                state = SrtParserState.NotStarted;
+
+                using (var reader = new StreamReader(data))
                 {
                     var record = new VideoSubtitlesRecord();
                     StringBuilder textBuffer = new StringBuilder();
@@ -45,6 +47,15 @@ namespace LingSubPlayer.Common.Subtitles
                         
                         if (string.IsNullOrEmpty(line))
                         {
+                            if (state == SrtParserState.SeparatorLine || state == SrtParserState.NotStarted)
+                            {
+                                if (line == null)
+                                {
+                                    break;
+                                }
+                                continue;
+                            }
+
                             if (state != SrtParserState.TextLine)
                             {
                                 throw new SubtitlesParserException(
@@ -120,5 +131,7 @@ namespace LingSubPlayer.Common.Subtitles
                 state = SrtParserState.Finished;
             }
         }
+
+
     }
 }
