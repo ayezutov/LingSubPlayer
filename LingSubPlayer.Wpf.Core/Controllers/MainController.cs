@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using LingSubPlayer.Common;
 using LingSubPlayer.Common.Subtitles;
 using LingSubPlayer.Wpf.Core.ViewModel;
 using Vlc.DotNet.Core;
@@ -36,7 +37,7 @@ namespace LingSubPlayer.Wpf.Core.Controllers
 
         public static void InitializeApplication()
         {
-            var vlcBaseDirectory = new DirectoryInfo(Path.Combine(@"..\..\..\vlc", Environment.Is64BitProcess ? "x64" : "x86"));
+            var vlcBaseDirectory = new DirectoryInfo(Path.Combine(new Configuration().VlcPath, Environment.Is64BitProcess ? "x64" : "x86"));
 
             VlcContext.LibVlcDllsPath = vlcBaseDirectory.FullName;
             VlcContext.LibVlcPluginsPath = Path.Combine(vlcBaseDirectory.FullName, "plugins");
