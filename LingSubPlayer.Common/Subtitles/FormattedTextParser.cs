@@ -1,3 +1,4 @@
+using HtmlAgilityPack;
 using LingSubPlayer.Common.Subtitles.Data;
 
 namespace LingSubPlayer.Common.Subtitles
@@ -6,7 +7,9 @@ namespace LingSubPlayer.Common.Subtitles
     {
         public FormattedText Parse(string text)
         {
-            return new FormattedText(text);
+            var doc = new HtmlDocument();
+            doc.LoadHtml(text);
+            return new FormattedText(doc.DocumentNode.InnerText);
         }
     }
 }
