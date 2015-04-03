@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using LingSubPlayer.Common;
@@ -76,7 +77,8 @@ namespace LingSubPlayer
 
                 app.Run(mainController.View as Window);
                 
-                app.UpdateIfAnyUpdates();
+                var updateTask = app.UpdateIfAnyUpdates();
+                updateTask.Wait();
             }
         }
 
@@ -85,7 +87,7 @@ namespace LingSubPlayer
             this.log = log;
         }
 
-        private async void UpdateIfAnyUpdates()
+        private async Task UpdateIfAnyUpdates()
         {
             var updateUrl = new Configuration().UpdateUrl;
 
@@ -97,37 +99,33 @@ namespace LingSubPlayer
                 {
                     try
                     {
-                        var infoTask = mgr.CheckForUpdate();
-                        infoTask.Wait();
+                        var info = await mgr.CheckForUpdate();
 
-                        if (infoTask.Result.ReleasesToApply.Any())
+                        if (info.ReleasesToApply.Any())
                         {
-                            log.Trace("Updates were found. Current version is {0}. The following versions to be applied: {1}", infoTask.Result.CurrentlyInstalledVersion.Version.ToString(), string.Join(", ", infoTask.Result.ReleasesToApply.Select(r => r.Version.ToString())));
+                            log.Trace("Updates were found. Current version is {0}. The following versions to be applied: {1}", info.CurrentlyInstalledVersion.Version.ToString(), string.Join(", ", info.ReleasesToApply.Select(r => r.Version.ToString())));
                             
                             log.Trace("Downloading updates...");
 
-                            var downloadTask = mgr.DownloadReleases(infoTask.Result.ReleasesToApply, i =>
+                            await mgr.DownloadReleases(info.ReleasesToApply, i =>
                             {
                                 log.Trace("Downloading... {0}%", i/10);
                             });
-                            downloadTask.Wait();
 
                             log.Trace("Successfully downloaded updates.");
 
                             log.Trace("Applying updates...");
 
-                            var applyTask = mgr.ApplyReleases(infoTask.Result, i =>
+                            await mgr.ApplyReleases(info, i =>
                             {
                                 log.Trace("Applying updates... {0}%", i);
                             });
-                            applyTask.Wait();
 
                             log.Trace("Successfully applied updates.");
 
                             log.Trace("Creating uninstall shortcuts...");
 
-                            var createRegistryUninstallEntryTask = mgr.CreateUninstallerRegistryEntry();
-                            createRegistryUninstallEntryTask.Wait();
+                            await mgr.CreateUninstallerRegistryEntry();
 
                             log.Trace("Created uninstall shortcuts.");
 
@@ -135,7 +133,7 @@ namespace LingSubPlayer
                         }
                         else
                         {
-                            log.Trace("No updates were found. Current version is {0}", infoTask.Result.CurrentlyInstalledVersion.Version.ToString());
+                            log.Trace("No updates were found. Current version is {0}", info.CurrentlyInstalledVersion.Version.ToString());
                         }
                     }
                     catch (Exception ex)

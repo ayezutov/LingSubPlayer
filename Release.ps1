@@ -22,11 +22,11 @@ param (
     }
 }
 
-
-$version = "0.1.0.8"
+$version = "0.1.0.10"
 $name = "LingSubPlayer"
 $nugetOutputDir = $PSScriptRoot +"\NuGetPack"
 $nuspec = $PSScriptRoot+"\"+$name+".nuspec"
+
 
 
 
@@ -41,5 +41,7 @@ $nuget = (Get-ChildItem -Path $PSScriptRoot -Filter Nuget.exe -Recurse).FullName
 
 &$nuget "pack" $nuspec "-OutputDirectory" "$nugetOutputDir"
 "Running Squirrel"
-&$squirrel --releasify "$nugetOutputDir\$name.$version.nupkg" "--setupIcon=$PSScriptRoot\Mockups\favicon.ico" "--releaseDir=$PSScriptRoot\Releases"
+&$squirrel --releasify "$nugetOutputDir\$name.$version.nupkg" "--setupIcon=$PSScriptRoot\Mockups\favicon.ico" "--releaseDir=$PSScriptRoot\Releases" "--bootstrapperExe=.\LingSubPlayer.Setup.exe"
 "Squirrel is completed"
+
+#make sure duplicated entries are removed from RELEASES

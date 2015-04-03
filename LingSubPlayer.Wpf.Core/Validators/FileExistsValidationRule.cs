@@ -1,18 +1,19 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
+using SystemInterface.IO;
 using SystemWrapper.IO;
 
 namespace LingSubPlayer.Wpf.Core.Validators
 {
     public class FileExistsValidationRule : ValidationRule
     {
-        private readonly IFileWrap file;
+        private readonly IFile file;
 
         public FileExistsValidationRule() : this(new FileWrap())
         {
         }
 
-        public FileExistsValidationRule(IFileWrap file)
+        public FileExistsValidationRule(IFile file)
         {
             this.file = file;
         }
