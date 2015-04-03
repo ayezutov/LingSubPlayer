@@ -28,6 +28,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LingSubPlayer.Common", "Lin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LingSubPlayer.Common.Tests", "LingSubPlayer.Common.Tests\LingSubPlayer.Common.Tests.csproj", "{EFF84DA9-70AD-4CE8-986C-3E4FBD79928F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{D64EC9F6-5645-4B5E-90F4-C1832A996242}"
+	ProjectSection(SolutionItems) = preProject
+		LingSubPlayer.nuspec = LingSubPlayer.nuspec
+		Release.ps1 = Release.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86

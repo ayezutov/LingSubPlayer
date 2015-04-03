@@ -7,5 +7,9 @@ namespace LingSubPlayer.Common
         public string VlcPath {
             get { return ConfigurationManager.AppSettings["vlc.location"]; }
         }
+
+        public string UpdateUrl {
+            get { return ConfigurationManager.AppSettings["update.url"]; }
+        }
     }
 }

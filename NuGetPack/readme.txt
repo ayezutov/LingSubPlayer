@@ -1,0 +1,1 @@
+This is a local folder, where releases are placed after being packed by NuGet
