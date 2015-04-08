@@ -22,12 +22,22 @@ param (
     }
 }
 
-$version = "0.1.0.10"
+$version = "0.1.0.11-dev"
 $name = "LingSubPlayer"
 $nugetOutputDir = $PSScriptRoot +"\NuGetPack"
 $nuspec = $PSScriptRoot+"\"+$name+".nuspec"
 
 
+# Release during any build:
+#0. Ensure, that generic current version was not yet uploaded to NuGet, fail it was
+#1. download and unpack previous version from NuGet
+#2. create nupkg from current version based on latest version
+#3. upload current version option
+
+
+
+# Deployment:
+#0. verify, that 
 
 
 $xml = [xml](Get-Content $nuspec)
