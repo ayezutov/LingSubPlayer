@@ -1,4 +1,3 @@
-version: Deployment #{build}
 build_script:
   - ps: .\deployment\deployment.ps1
 test: off
