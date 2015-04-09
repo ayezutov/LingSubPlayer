@@ -2,4 +2,4 @@
 
 $channel = "dev"
 
-Write-Output $settings[""].version
+Write-Output $settings["dev"].version
