@@ -1,0 +1,3 @@
+version: Deployment #{build}
+build:
+  ps: .\deployment\deployment.ps1
