@@ -36,7 +36,6 @@ param(
     $directory = $file | Split-Path
     $directory = New-Item -Path $directory -ItemType Directory -Force
     try{
-        #$webclient.DownloadFile("$uri\RELEASES",$file)
         $temp = Read-S3Object -BucketName $settings.amazon.bucketName -Key "$uri/RELEASES" -File $file
         
         if ([System.IO.File]::Exists($file))
@@ -80,17 +79,20 @@ $settings.channels.GetEnumerator() | % {
 
        if ($targetChannelVersion -eq $maxChannelVersion)
        {
-           Write-Output "No need to upgrade, already up to date"
-          # return
+           Write-Output "'$channelName': No need to upgrade, already up to date"
+		   Add-AppveyorMessage -Message "'$channelName': No need to upgrade, already up to date" -Category Information
+           return
        }
 
        if ($targetChannelVersion -gt $maxDevVersion){
            Write-Error "Cannot upgrade channel '$channelName' to version '$targetChannelVersion' which is higher than last developed '$maxDevVersion'"
+		   Add-AppveyorMessage -Message "Cannot upgrade channel '$channelName' to version '$targetChannelVersion' which is higher than last developed '$maxDevVersion'" -Category Error
            return;
        }
 
        if ($targetChannelVersion -lt $maxChannelVersion){
            Write-Warning "ATTENTION: channel '$channelName' will be downgraded to version '$targetChannelVersion'"
+		   Add-AppveyorMessage -Message "ATTENTION: channel '$channelName' will be downgraded to version '$targetChannelVersion'" -Category Warning
        }
 
        $newFileName = "$PSScriptRoot\$channelName\RELEASES-new"
@@ -99,7 +101,7 @@ $settings.channels.GetEnumerator() | % {
 
        $result | Out-File -FilePath $newFileName
 
-       #Write-S3Object -BucketName $settings.amazon.bucketName -Key "$($channel.url)/RELEASES" -File $newFileName
+       Write-S3Object -BucketName $settings.amazon.bucketName -Key "$($channel.url)/RELEASES" -File $newFileName
 
        $website = Get-S3BucketWebsite -BucketName $settings.amazon.bucketName
        $routingRule = ($website.RoutingRules | ?{ $_.Condition.KeyPrefixEquals -contains "$($channel.url)/Setup.exe" } | select -First 1)
