@@ -1,4 +1,9 @@
-version: "Deployment #{build}"
+version: "Deployment-{build}"
 build_script:
   - ps: .\deployment\deployment.ps1
+environment:
+  s3accessKey:
+    secure: iO4PBdxls7hMeAsAzHqEHiq3cSl17pTEDgXXbeavk9w=
+  s3secretaccessKey:
+    secure: +/X4U17CUh18ztEbEXnkpP3TE0EgaMYgU70FKuyVVBidK99fsc910a1pQ6z6qKIS
 test: off
