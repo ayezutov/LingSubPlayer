@@ -80,19 +80,18 @@ $settings.channels.GetEnumerator() | % {
        if ($targetChannelVersion -eq $maxChannelVersion)
        {
            Write-Output "'$channelName': No need to upgrade, already up to date"
-		   Add-AppveyorMessage -Message "'$channelName': No need to upgrade, already up to date" -Category Information
+		   #Add-AppveyorMessage -Message "'$channelName': No need to upgrade, already up to date" -Category Information
            return
        }
 
        if ($targetChannelVersion -gt $maxDevVersion){
-           Write-Error "Cannot upgrade channel '$channelName' to version '$targetChannelVersion' which is higher than last developed '$maxDevVersion'"
-		   Add-AppveyorMessage -Message "Cannot upgrade channel '$channelName' to version '$targetChannelVersion' which is higher than last developed '$maxDevVersion'" -Category Error
-           return;
+           throw ("Cannot upgrade channel '$channelName' to version '$targetChannelVersion' which is higher than last developed '$maxDevVersion'")
+		   #Add-AppveyorMessage -Message "Cannot upgrade channel '$channelName' to version '$targetChannelVersion' which is higher than last developed '$maxDevVersion'" -Category Error
        }
 
        if ($targetChannelVersion -lt $maxChannelVersion){
            Write-Warning "ATTENTION: channel '$channelName' will be downgraded to version '$targetChannelVersion'"
-		   Add-AppveyorMessage -Message "ATTENTION: channel '$channelName' will be downgraded to version '$targetChannelVersion'" -Category Warning
+		   #Add-AppveyorMessage -Message "ATTENTION: channel '$channelName' will be downgraded to version '$targetChannelVersion'" -Category Warning
        }
 
        $newFileName = "$PSScriptRoot\$channelName\RELEASES-new"
