@@ -111,7 +111,7 @@ function Run{
     #leave unique entries in file 
     [array] $releaseEntries = Get-ReleaseEntriesFromFile -file $releasesFile
     $releaseEntries = $releaseEntries | group { "$($_.Version)-$($_.IsFullOrDelta)" } | select @{Name="LastInGroup";Expression={$_.Group[$_.Count-1]}} | select -ExpandProperty LastInGroup
-    $releaseEntriesStrings = $releaseEntries | select -ExpandProperty RawLine
+    [string[]] $releaseEntriesStrings = $releaseEntries | select -ExpandProperty RawLine
     if ($releaseEntries -eq $null){
         $releasesEntries = @();
     }
@@ -120,17 +120,22 @@ function Run{
     }    
 
     Write-Output "Uploading RELEASES"
-    Write-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES" -Content $releaseEntriesStrings 
+    Write-Output ($releaseEntriesStrings | Out-String)
+
+    #Write-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES" -Content ($releaseEntriesStrings | Out-String)
 
     $squirrelNuGetPackageFileName = $releaseEntries[$releaseEntries.Length - 1].FileName
+
+    Get-ChildItem -Path "$squirrelReleaseDir"
+
     Write-Output "Uploading NuGet package $squirrelNuGetPackageFileName"
-    Write-S3Object -BucketName $s3Bucket -Key "$s3Key/$squirrelNuGetPackageFileName" -File "$squirrelReleaseDir\$squirrelNuGetPackageFileName"
+    #Write-S3Object -BucketName $s3Bucket -Key "$s3Key/$squirrelNuGetPackageFileName" -File "$squirrelReleaseDir\$squirrelNuGetPackageFileName"
 
     Write-Output "Uploading Setup.exe"
-    Write-S3Object -BucketName $s3Bucket -Key "$s3Key/Setup_$($releaseEntries[$releaseEntries.Length - 1].Version).exe" -File "$squirrelReleaseDir\Setup.exe"
+    #Write-S3Object -BucketName $s3Bucket -Key "$s3Key/Setup_$($releaseEntries[$releaseEntries.Length - 1].Version).exe" -File "$squirrelReleaseDir\Setup.exe"
     
     Write-Output "Updating Routing rules"
-    Write-RoutingRules -Version $releaseEntries[$releaseEntries.Length - 1].Version -Key $s3Key -Bucket $s3Bucket
+    #Write-RoutingRules -Version $releaseEntries[$releaseEntries.Length - 1].Version -Key $s3Key -Bucket $s3Bucket
 }
 
 $ErrorActionPreference = "Stop"
