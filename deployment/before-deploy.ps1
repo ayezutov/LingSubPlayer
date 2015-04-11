@@ -1,1 +1,0 @@
-Write-Output "This is custom deployment script running"
