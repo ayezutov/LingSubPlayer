@@ -28,6 +28,9 @@ param(
 )
     $lines = Get-Content $file
 
+    Write-Host "Lines: $lines"
+    Write-Output "Lines: $lines"
+
     $matches = select-string -path $file -pattern "^(?<hash>[0-9a-fA-F]{40})\s+(?<filename>\S+(?<version>\d+\.\d+\.\d+\.\d+)(?:\-(?<fullOrDelta>\w+)){0,1}\S+)\s+(?<size>\d+)[\r]*$" -allmatches
 
     if ($matches -eq $null) { 
@@ -102,6 +105,8 @@ function Run{
     
     
     $releasesFile = Read-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES" -File "$squirrelReleaseDir\RELEASES"
+
+    Write-Host "Release file downloaded: $releasesFile"
     
     Write-Output "Running Squirrel"
     $squirrel = (Get-ChildItem -Path $PSScriptRoot -Filter Squirrel.exe -Recurse).FullName
