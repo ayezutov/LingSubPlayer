@@ -80,7 +80,7 @@ function Write-RoutingRules{
 function Run{
     Set-AWSCredentials -AccessKey $env:s3accessKey -SecretKey $env:s3secretaccessKey
 
-    $version = $env:APPVEYOR_BUILD_ID
+    $version = $env:APPVEYOR_BUILD_VERSION
     $name = "LingSubPlayer"
     $nugetOutputDir = $PSScriptRoot +"\NuGetPack"
     $nuspec = $PSScriptRoot+"\"+$name+".nuspec"
@@ -129,5 +129,7 @@ function Run{
     Write-Output "Updating Routing rules"
     Write-RoutingRules -Version $releaseEntries[$releaseEntries.Length - 1].Version -Key $s3Key -Bucket $s3Bucket
 }
+
+$ErrorActionPreference = "Stop"
 
 Run
