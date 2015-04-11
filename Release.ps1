@@ -121,8 +121,11 @@ function Run{
 
     Write-Output "Uploading RELEASES"
     Write-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES" -Content $releaseEntriesStrings 
-    Write-Output "Uploading NuGet package"
-    Write-S3Object -BucketName $s3Bucket -Key "$s3Key/$($releaseEntries[$releaseEntries.Length - 1].FileName)" -File "$squirrelReleaseDir\$($releaseEntries[$releaseEntries.Length - 1].FileName)"
+
+    $squirrelNuGetPackageFileName = $releaseEntries[$releaseEntries.Length - 1].FileName
+    Write-Output "Uploading NuGet package $squirrelNuGetPackageFileName"
+    Write-S3Object -BucketName $s3Bucket -Key "$s3Key/$squirrelNuGetPackageFileName" -File "$squirrelReleaseDir\$squirrelNuGetPackageFileName"
+
     Write-Output "Uploading Setup.exe"
     Write-S3Object -BucketName $s3Bucket -Key "$s3Key/Setup_$($releaseEntries[$releaseEntries.Length - 1].Version).exe" -File "$squirrelReleaseDir\Setup.exe"
     

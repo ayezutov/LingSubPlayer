@@ -30,6 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LingSubPlayer.Common.Tests"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{D64EC9F6-5645-4B5E-90F4-C1832A996242}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
 		LingSubPlayer.nuspec = LingSubPlayer.nuspec
 		Release.ps1 = Release.ps1
 		packages\repositories.config = packages\repositories.config
