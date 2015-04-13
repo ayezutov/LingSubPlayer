@@ -26,8 +26,10 @@ function Get-ReleaseEntriesFromFile{
 param(
     [string] $file = $(throw "file is a required parameter")
 )
-    $lines = Get-Content $file
 
+    if (-not [System.IO.File]::Exists($file)){
+        return @();
+    }
     $matches = select-string -path $file -pattern "^(?<hash>[0-9a-fA-F]{40})\s+(?<filename>\S+(?<version>\d+\.\d+\.\d+\.\d+)(?:\-(?<fullOrDelta>\w+)){0,1}\S+)\s+(?<size>\d+)[\r]*$" -allmatches
 
     if ($matches -eq $null) { 
@@ -102,9 +104,36 @@ function Run{
     Write-Host "NuGet completed"
     
     
-    $releasesFile = Read-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES" -File "$squirrelReleaseDir\RELEASES"
+    if ((Get-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES") -ne $null)
+    {
+        Write-Host "Downloading RELEASES file"
+        $releasesFile = Read-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES" -File "$squirrelReleaseDir\RELEASES"
 
-    Write-Host "Release file downloaded: $releasesFile"
+        Write-Host "Release file downloaded: $releasesFile"
+
+        $initialReleaseEntries = Get-ReleaseEntriesFromFile -file $releasesFile
+        $lastFullRelease = $initialReleaseEntries | ?{ $_.IsFullOrDelta -eq "full" } | Select-Object -Last 1
+        if ($lastFullRelease -eq $null)
+        {
+            Remove-Item -Path "$squirrelReleaseDir\RELEASES"
+        }
+        else
+        {
+            $s3Object = Get-S3Object -BucketName $s3Bucket -Key "$s3Key/$($lastFullRelease.FileName)"
+            if ($s3Object -eq $null)
+            {
+                Remove-Item -Path "$squirrelReleaseDir\RELEASES"
+            }
+            else
+            {
+                $nupkgFile = Read-S3Object -BucketName $s3Bucket -Key "$s3Key/$($lastFullRelease.FileName)" -File "$squirrelReleaseDir\$($lastFullRelease.FileName)"
+            }
+        }
+    }
+    else
+    {
+        Write-Host "RELEASES file was not found on server"
+    }
     
     Write-Host "Running Squirrel"
     $squirrel = (Get-ChildItem -Path $PSScriptRoot -Filter Squirrel.exe -Recurse).FullName
@@ -112,7 +141,7 @@ function Run{
     Write-Host "Squirrel is completed"    
 
     #leave unique entries in file 
-    [array] $releaseEntries = Get-ReleaseEntriesFromFile -file $releasesFile
+    [array] $releaseEntries = Get-ReleaseEntriesFromFile -file "$squirrelReleaseDir\RELEASES"
     $releaseEntries = $releaseEntries | group { "$($_.Version)-$($_.IsFullOrDelta)" } | select @{Name="LastInGroup";Expression={$_.Group[$_.Count-1]}} | select -ExpandProperty LastInGroup
     [string[]] $releaseEntriesStrings = $releaseEntries | select -ExpandProperty RawLine
     if ($releaseEntries -eq $null){
@@ -125,20 +154,22 @@ function Run{
     Write-Host "Uploading RELEASES"
     Write-Host ($releaseEntriesStrings | Out-String)
 
-    #Write-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES" -Content ($releaseEntriesStrings | Out-String)
+    Write-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES" -Content ($releaseEntriesStrings | Out-String)
 
-    $squirrelNuGetPackageFileName = $releaseEntries[$releaseEntries.Length - 1].FileName
+    $versionAsVersion = New-Object version($version)
+    $squirrelNuGetPackageFileNames = $releaseEntries | ?{ $_.Version -eq $versionAsVersion } | select -ExpandProperty FileName
 
-    Get-ChildItem -Path "$squirrelReleaseDir"
-
-    Write-Host "Uploading NuGet package $squirrelNuGetPackageFileName"
-    Write-S3Object -BucketName $s3Bucket -Key "$s3Key/$squirrelNuGetPackageFileName" -File "$squirrelReleaseDir\$squirrelNuGetPackageFileName"
-
+    $squirrelNuGetPackageFileNames | %{
+        Write-Host "Uploading NuGet package $_"
+        Write-S3Object -BucketName $s3Bucket -Key "$s3Key/$_" -File "$squirrelReleaseDir\$_"
+    }
+    
+    
     Write-Host "Uploading Setup.exe"
-    Write-S3Object -BucketName $s3Bucket -Key "$s3Key/Setup_$($releaseEntries[$releaseEntries.Length - 1].Version).exe" -File "$squirrelReleaseDir\Setup.exe"
+    Write-S3Object -BucketName $s3Bucket -Key "$s3Key/Setup_$version.exe" -File "$squirrelReleaseDir\Setup.exe"
     
     Write-Host "Updating Routing rules"
-    Write-RoutingRules -Version $releaseEntries[$releaseEntries.Length - 1].Version -Key $s3Key -Bucket $s3Bucket
+    Write-RoutingRules -Version $version -Key $s3Key -Bucket $s3Bucket
 
     Write-Host "All uploads are completed"
 }
