@@ -1,4 +1,5 @@
 version: $(productVersion).{build}
+skip_tags: true
 configuration: Release
 platform: x86
 assembly_info:
