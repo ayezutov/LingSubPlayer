@@ -11,5 +11,10 @@ namespace LingSubPlayer.Common
         public string UpdateUrl {
             get { return ConfigurationManager.AppSettings["update.url"]; }
         }
+
+        public string ApplicationPackageName
+        {
+            get { return "LingSubPlayer"; } 
+        }
     }
 }

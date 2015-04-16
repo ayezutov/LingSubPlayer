@@ -70,7 +70,9 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Data\SessionData.cs" />
     <Compile Include="IConfiguration.cs" />
+    <Compile Include="Logging\IInternalLog.cs" />
     <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\InternalLog.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="ReflectionHelpers.cs" />
     <Compile Include="Properties\Annotations.cs" />

@@ -1,23 +1,26 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using LingSubPlayer.Common;
 using LingSubPlayer.Common.Logging;
+using LingSubPlayer.Install;
 using LingSubPlayer.Wpf.Core;
 using LingSubPlayer.Wpf.Core.Annotations;
 using LingSubPlayer.Wpf.Core.Controllers;
 using NLog;
 using Squirrel;
 
+[assembly: AssemblyMetadata("SquirrelAwareVersion", "1")]
+
 namespace LingSubPlayer
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
         private readonly ILog log;
 
@@ -33,11 +36,13 @@ namespace LingSubPlayer
                     .FatalException("Unhandled exception", args.ExceptionObject as Exception);
             };
 
+            new InstallationAssistant(new Configuration()).PerformStepsIfRequired();
+            
             var assemblies = new[]
             {
-                typeof(App).Assembly, //LingSubPlayer
-                typeof(CanBeNullAttribute).Assembly, //LingSubPlayer.Common
-                typeof(Commands).Assembly, // LingSubPlayer.Wpf.Core
+                typeof(App).Assembly,                   //LingSubPlayer
+                typeof(CanBeNullAttribute).Assembly,    //LingSubPlayer.Common
+                typeof(Commands).Assembly,              // LingSubPlayer.Wpf.Core
             };
 
             var containerBuilder = new ContainerBuilder();
@@ -47,11 +52,10 @@ namespace LingSubPlayer
                 .Where(
                     t =>
                         !t.IsAssignableTo(typeof (IView<>)) &&
-                        !t.FullName.StartsWith("LingSubPlayer.Wpf.Core.Controllers"))
+                        !t.FullName.StartsWith("LingSubPlayer.Wpf.Core.Controllers") &&
+                        !t.FullName.StartsWith("LingSubPlayer.Wpf.Core.Annotations"))
                 .AsImplementedInterfaces()
                 .AsSelf();
-
-            containerBuilder.Register(c => new Log(LogManager.GetCurrentClassLogger())).As<ILog>();
 
             containerBuilder
                 .RegisterAssemblyTypes(assemblies)
@@ -89,13 +93,13 @@ namespace LingSubPlayer
 
         private async Task UpdateIfAnyUpdates()
         {
-            var updateUrl = new Configuration().UpdateUrl;
+            var configuration = new Configuration();
 
-            if (!string.IsNullOrEmpty(updateUrl))
+            if (!string.IsNullOrEmpty(configuration.UpdateUrl))
             {
-                log.Trace("Looking for updates at {0}...", updateUrl);
+                log.Write.Trace("Looking for updates at {0}...", configuration.UpdateUrl);
 
-                using (var mgr = new UpdateManager(updateUrl, "LingSubPlayer", FrameworkVersion.Net45))
+                using (var mgr = new UpdateManager(configuration.UpdateUrl, configuration.ApplicationPackageName, FrameworkVersion.Net45))
                 {
                     try
                     {
@@ -103,52 +107,52 @@ namespace LingSubPlayer
 
                         if (info.ReleasesToApply.Any())
                         {
-                            log.Trace("Updates were found. Current version is {0}. The following versions to be applied: {1}", info.CurrentlyInstalledVersion.Version.ToString(), string.Join(", ", info.ReleasesToApply.Select(r => r.Version.ToString())));
-                            
-                            log.Trace("Downloading updates...");
+                            log.Write.Trace("Updates were found. Current version is {0}. The following versions to be applied: {1}", info.CurrentlyInstalledVersion.Version.ToString(), string.Join(", ", info.ReleasesToApply.Select(r => r.Version.ToString())));
+
+                            log.Write.Trace("Downloading updates...");
 
                             await mgr.DownloadReleases(info.ReleasesToApply, i =>
                             {
-                                log.Trace("Downloading... {0}%", i/10);
+                                log.Write.Trace("Downloading... {0}%", new[] {i/10});
                             });
 
-                            log.Trace("Successfully downloaded updates.");
+                            log.Write.Trace("Successfully downloaded updates.");
 
-                            log.Trace("Applying updates...");
+                            log.Write.Trace("Applying updates...");
 
                             await mgr.ApplyReleases(info, i =>
                             {
-                                log.Trace("Applying updates... {0}%", i);
+                                log.Write.Trace("Applying updates... {0}%", new[] {i});
                             });
 
-                            log.Trace("Successfully applied updates.");
+                            log.Write.Trace("Successfully applied updates.");
 
-                            log.Trace("Creating uninstall shortcuts...");
+                            log.Write.Trace("Creating uninstall shortcuts...");
 
                             await mgr.CreateUninstallerRegistryEntry();
 
-                            log.Trace("Created uninstall shortcuts.");
+                            log.Write.Trace("Created uninstall shortcuts.");
 
-                            log.Trace("Update is completed.");
+                            log.Write.Trace("Update is completed.");
                         }
                         else
                         {
-                            log.Trace("No updates were found. Current version is {0}", info.CurrentlyInstalledVersion.Version.ToString());
+                            log.Write.Trace("No updates were found. Current version is {0}", info.CurrentlyInstalledVersion.Version.ToString());
                         }
                     }
                     catch (Exception ex)
                     {
-                        log.Error("There was an error while checking for updates", ex);
+                        log.Write.Error("There was an error while checking for updates", ex);
                         return;
                     }
                 }
             }
             else
             {
-                log.Trace("Update is skipped as there is no update URL specified");
+                log.Write.Trace("Update is skipped as there is no update URL specified");
             }
 
-            log.Trace("End!");
+            log.Write.Trace("End!");
         }
     }
 }

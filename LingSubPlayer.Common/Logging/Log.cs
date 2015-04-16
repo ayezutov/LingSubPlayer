@@ -1,32 +1,49 @@
 ﻿using System;
-using NLog;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace LingSubPlayer.Common.Logging
 {
     public class Log : ILog
     {
-        private readonly Logger logger;
+        private InternalLog internalLog;
 
-        public Log(Logger logger)
-        {
-            this.logger = logger;
-        }
+        public IInternalLog Write {
+            get
+            {
+                if (internalLog != null)
+                {
+                    return internalLog;
+                }
 
-        public void Trace(string message, params object[] args)
-        {
-            if (args == null || args.Length == 0)
-            {
-                logger.Trace(message);
-            }
-            else
-            {
-                logger.Trace(message, args);
+                return (internalLog = new InternalLog(GetCallingClassName()));
             }
         }
 
-        public void Error(string message, Exception exception)
+        private string GetCallingClassName()
         {
-            logger.ErrorException(message, exception);
+            int skipFrames = 2;
+            Type declaringType;
+            string name;
+            do
+            {
+                MethodBase method = new StackFrame(skipFrames, false).GetMethod();
+                declaringType = method.DeclaringType;
+                if (declaringType == (Type)null)
+                {
+                    return method.Name;
+                }
+
+                while (declaringType.IsNested && declaringType.ReflectedType != null && declaringType.Name.Contains("<"))
+                {
+                    declaringType = declaringType.ReflectedType;
+                }
+
+                ++skipFrames;
+                name = declaringType.FullName;
+            }
+            while (declaringType.Module.Name.Equals("mscorlib.dll", StringComparison.OrdinalIgnoreCase));
+            return name;
         }
     }
 }

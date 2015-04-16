@@ -1,4 +1,6 @@
 ﻿
+$isLocalBuild = [string]::IsNullOrEmpty("$env:APPVEYOR");
+
 function Edit-XmlNodes {
 param (
     [xml] $doc = $(throw "doc is a required parameter"),
@@ -74,13 +76,17 @@ function Write-RoutingRules{
 
        $website.IndexDocumentSuffix = if ($website.IndexDocumentSuffix -eq $null -or $website.IndexDocumentSuffix -eq "") {"index.htm"} else {$website.IndexDocumentSuffix}
 
-       Write-S3BucketWebsite -BucketName $bucket -WebsiteConfiguration_RoutingRule $website.RoutingRules -WebsiteConfiguration_IndexDocumentSuffix $website.IndexDocumentSuffix
+       #Write-S3BucketWebsite -BucketName $bucket -WebsiteConfiguration_RoutingRule $website.RoutingRules -WebsiteConfiguration_IndexDocumentSuffix $website.IndexDocumentSuffix
 }
 
 #Import-Module "C:\Program Files (x86)\AWS Tools\PowerShell\AWSPowerShell\AWSPowerShell.psd1"
 
 function Run{
-    Set-AWSCredentials -AccessKey $env:s3accessKey -SecretKey $env:s3secretaccessKey
+    
+    if (-not $isLocalBuild)
+    { 
+        Set-AWSCredentials -AccessKey $env:s3accessKey -SecretKey $env:s3secretaccessKey 
+    }
 
     $version = $env:APPVEYOR_BUILD_VERSION
     $name = "LingSubPlayer"
@@ -104,7 +110,7 @@ function Run{
     Write-Host "NuGet completed"
     
     
-    if ((Get-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES") -ne $null)
+    if ((-not $isLocalBuild) -and ((Get-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES") -ne $null))
     {
         Write-Host "Downloading RELEASES file"
         $releasesFile = Read-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES" -File "$squirrelReleaseDir\RELEASES"
@@ -154,22 +160,34 @@ function Run{
     Write-Host "Uploading RELEASES"
     Write-Host ($releaseEntriesStrings | Out-String)
 
-    Write-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES" -Content ($releaseEntriesStrings | Out-String)
+    if (-not $isLocalBuild)
+    { 
+        Write-S3Object -BucketName $s3Bucket -Key "$s3Key/RELEASES" -Content ($releaseEntriesStrings | Out-String)
+    }
 
     $versionAsVersion = New-Object version($version)
     $squirrelNuGetPackageFileNames = $releaseEntries | ?{ $_.Version -eq $versionAsVersion } | select -ExpandProperty FileName
 
     $squirrelNuGetPackageFileNames | %{
         Write-Host "Uploading NuGet package $_"
-        Write-S3Object -BucketName $s3Bucket -Key "$s3Key/$_" -File "$squirrelReleaseDir\$_"
+        if (-not $isLocalBuild)
+        { 
+            Write-S3Object -BucketName $s3Bucket -Key "$s3Key/$_" -File "$squirrelReleaseDir\$_"
+        }
     }
     
     
     Write-Host "Uploading Setup.exe"
-    Write-S3Object -BucketName $s3Bucket -Key "$s3Key/Setup_$version.exe" -File "$squirrelReleaseDir\Setup.exe"
+    if (-not $isLocalBuild)
+    { 
+        Write-S3Object -BucketName $s3Bucket -Key "$s3Key/Setup_$version.exe" -File "$squirrelReleaseDir\Setup.exe"
+    }
     
     Write-Host "Updating Routing rules"
-    Write-RoutingRules -Version $version -Key $s3Key -Bucket $s3Bucket
+    if (-not $isLocalBuild)
+    { 
+        Write-RoutingRules -Version $version -Key $s3Key -Bucket $s3Bucket
+    }
 
     Write-Host "All uploads are completed"
 }
