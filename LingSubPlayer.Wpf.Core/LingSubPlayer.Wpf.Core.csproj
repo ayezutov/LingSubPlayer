@@ -88,6 +88,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttachedProperties.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="Controllers\IMainView.cs" />
     <Compile Include="Controllers\IOpenFileDialogView.cs" />

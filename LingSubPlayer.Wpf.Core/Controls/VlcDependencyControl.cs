@@ -341,6 +341,21 @@ namespace LingSubPlayer.Wpf.Core.Controls
             remove { vlcControl.VideoOutChanged -= value; }
         }
 
+        public static readonly DependencyPropertyKey CanPlayProperty = DependencyProperty.RegisterReadOnly(
+            "CanPlay", typeof (bool), typeof (VlcDependencyControl), new PropertyMetadata(default(bool)));
+
+        public bool CanPlay
+        {
+            get { return (bool) GetValue(CanPlayProperty.DependencyProperty); }
+        }
+
+        public static readonly DependencyPropertyKey CanPauseProperty = DependencyProperty.RegisterReadOnly(
+            "CanPause", typeof (bool), typeof (VlcDependencyControl), new PropertyMetadata(default(bool)));
+
+        public bool CanPause
+        {
+            get { return (bool) GetValue(CanPauseProperty.DependencyProperty); }
+        }
         #endregion
 
 

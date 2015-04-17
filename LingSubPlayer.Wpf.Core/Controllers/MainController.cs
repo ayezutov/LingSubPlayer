@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using LingSubPlayer.Common;
+using LingSubPlayer.Common.Data;
 using LingSubPlayer.Common.Subtitles;
 using LingSubPlayer.Wpf.Core.ViewModel;
 using Vlc.DotNet.Core;
@@ -22,6 +23,12 @@ namespace LingSubPlayer.Wpf.Core.Controllers
         {
             var session = await View.ShowOpenVideoFileDialog();
 
+//            SessionData session = null; new SessionData()
+//            {
+//                VideoFileName = @"d:\temp\LingSubPlayer\data\cartoon.flv",
+//                SubtitlesOriginalFileName = @"d:\temp\LingSubPlayer\data\ENG.srt",
+//                SubtitlesTranslatedFileName = @"d:\temp\LingSubPlayer\data\RUS.srt"
+//            };
             if (session != null)
             {
                 using (var subtitlesOriginalStream = File.OpenRead(session.SubtitlesOriginalFileName))

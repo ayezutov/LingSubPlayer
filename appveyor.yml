@@ -9,7 +9,7 @@ assembly_info:
   assembly_file_version: $(productVersion)
   assembly_informational_version: $(productVersion)+{version}
 environment:
-  productVersion: 0.1.0
+  productVersion: 0.1.1
   s3accessKey:
     secure: iO4PBdxls7hMeAsAzHqEHiq3cSl17pTEDgXXbeavk9w=
   s3secretaccessKey:
