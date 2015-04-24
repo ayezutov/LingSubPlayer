@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:viewModel="clr-namespace:LingSubPlayer.Wpf.Core.ViewModel;assembly=LingSubPlayer.Wpf.Core"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:lingSubPlayer="clr-namespace:LingSubPlayer"
+        xmlns:controllers="clr-namespace:LingSubPlayer.Wpf.Core.Controllers;assembly=LingSubPlayer.Wpf.Core"
+        xmlns:dialogs="clr-namespace:LingSubPlayer.Dialogs"
         Title="LingSubPlayer" Height="364" Width="576"
         Background="Black"
         SnapsToDevicePixels="True"
@@ -20,10 +20,14 @@
         <CommandBinding Command="core:Commands.ToSubtitlePreviousBlockBeginning" Executed="ToSubtitlePreviousBlockBeginningExecuted"></CommandBinding>
     </Window.CommandBindings>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="57*"/>
+            <ColumnDefinition Width="14*"/>
+        </Grid.ColumnDefinitions>
 
-        <controls:VlcDependencyControl x:Name="VlcControl" />
+        <controls:VlcDependencyControl x:Name="VlcControl" Grid.ColumnSpan="2" />
 
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" Grid.ColumnSpan="2">
             <Grid.Background>
                 <VisualBrush Stretch="Uniform">
                     <VisualBrush.Visual>
@@ -33,7 +37,7 @@
             </Grid.Background>
         </Grid>
 
-        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LastChildFill="False" x:Name="SubtitlesPanel">
+        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LastChildFill="False" x:Name="SubtitlesPanel" Grid.ColumnSpan="2">
             <Grid DockPanel.Dock="Bottom"  Height="{StaticResource ControlBarHeight}" Margin="0,10,0,0"></Grid>
             <Viewbox DockPanel.Dock="Bottom" Style="{StaticResource SubtitlesViewbox}">
                 <Border>
@@ -47,20 +51,23 @@
                 </Border>
             </Viewbox>
         </DockPanel>
-
-        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LastChildFill="False" IsEnabled="{Binding ElementName=ModalWindowContainer, Path=IsModalChildVisible, Converter={StaticResource InverseBoolConverter}}">
+        
+        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LastChildFill="False" IsEnabled="{Binding ElementName=ModalWindowContainer, Path=IsModalChildVisible, Converter={StaticResource InverseBoolConverter}}" Grid.ColumnSpan="2">
             <Grid DockPanel.Dock="Bottom"  x:Name="ControlPanel" Style="{StaticResource ControlPanel}" Height="{StaticResource ControlBarHeight}" VerticalAlignment="Center">
+                
+
+                <TextBlock Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" Text='{Binding ElementName=VlcControl, Path=Time, StringFormat="hh\\:mm\\:ss"}' />
+                
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button Focusable="False" Style="{StaticResource SubtitleBackwardButtonStyle}"></Button>
-                    <Button Focusable="False" Margin="{StaticResource HorizontalSpacingMargin}" Command="TogglePlayPause" Style="{StaticResource PlayButtonStyle}">
+                    <Button Focusable="False" Style="{StaticResource SubtitleBackwardButtonStyle}" ToolTip="To the previous subtitle block"></Button>
+                    <Button Focusable="False" Margin="{StaticResource HorizontalSpacingMargin}" Command="TogglePlayPause" Style="{StaticResource PlayButtonStyle}" ToolTip="Play/Pause">
                         <core:AttachedProperties.CanPause>
                             <Binding ElementName="VlcControl" Path="IsPlaying" />
                         </core:AttachedProperties.CanPause>
                     </Button>
-                    <Button Focusable="False" Margin="{StaticResource HorizontalSpacingMargin}" Style="{StaticResource SubtitleForwardButtonStyle}" />
+                    <Button Focusable="False" Margin="{StaticResource HorizontalSpacingMargin}" Style="{StaticResource SubtitleForwardButtonStyle}" ToolTip="To the next subtitle block" />
                 </StackPanel>
 
-                <TextBlock Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#DBDBDB" Text='{Binding ElementName=VlcControl, Path=Time, StringFormat="hh\\:mm\\:ss"}' />
             </Grid>
             <ProgressBar DockPanel.Dock="Bottom" Height="{StaticResource ProgressBarHeightExpanded }" x:Name="Timeline"
                          Maximum="{Binding ElementName=VlcControl, Path=Duration, Converter={StaticResource TimeSpanToDoubleConverter}}"
@@ -68,11 +75,12 @@
             </ProgressBar>
 
         </DockPanel>
-
-        <controls:WindowContainer ModalBackgroundBrush="#A6252525" x:Name="ModalWindowContainer">
-<!--            <xctk:ChildWindow x:Name="OpenNewFileWindow" IsModal="True" Style="{StaticResource ChildWindowStyle}">-->
-<!--                <lingSubPlayer:OpenFileDialog Width="500" />-->
-<!--            </xctk:ChildWindow>-->
+        
+        <controls:WindowContainer ModalBackgroundBrush="#A6252525" x:Name="ModalWindowContainer" Grid.ColumnSpan="2"
+                                  Grid.Column="0">
         </controls:WindowContainer>
+
+        <dialogs:UpdatesAvailableDialog Grid.Column="0" Margin="5,0,0,3" VerticalAlignment="Bottom" HorizontalAlignment="Left" x:Name="UpdatesAvailableDialog" Visibility="Collapsed"></dialogs:UpdatesAvailableDialog>
+<!--        -->
     </Grid>
 </Window>

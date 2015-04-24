@@ -30,21 +30,21 @@ namespace LingSubPlayer
         {
             this.container = container;
             InitializeComponent();
-
-            Closing += WindowClosing;
+            
+            Closed += WindowClosed;
             Loaded += WindowLoaded;
+        }
+
+        private void WindowClosed(object sender, EventArgs e)
+        {
+            Controller.OnBeforeExit();
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             Controller.OnLoad();
         }
-
-        private void WindowClosing(object sender, CancelEventArgs e)
-        {
-            VlcContext.CloseAll();
-        }
-
+        
         private void TogglePlayPauseExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             if (VlcControl.IsPaused)
@@ -82,6 +82,15 @@ namespace LingSubPlayer
 
             VlcControl.Media = new PathMedia(videoFileName);
             VlcControl.Play();
+        }
+
+        public void ShowUpdatesAvailable(AvailableUpdatesInformation availableUpdatesInformation)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                UpdatesAvailableDialog.Visibility = Visibility.Visible;
+                UpdatesAvailableDialog.DataContext = availableUpdatesInformation;
+            });
         }
 
         private Style ChildWindowStyle

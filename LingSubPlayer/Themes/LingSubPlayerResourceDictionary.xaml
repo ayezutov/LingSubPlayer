@@ -12,9 +12,10 @@
     </ResourceDictionary.MergedDictionaries>
     
     <!-- Converters -->
-    <converters:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter"></converters:TimeSpanToDoubleConverter>
-    <xctk:InverseBoolConverter x:Key="InverseBoolConverter"></xctk:InverseBoolConverter>
-    
+    <converters:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter" />
+    <converters:PercentageToAngleConverter x:Key="PercentageToAngleConverter" />
+    <xctk:InverseBoolConverter x:Key="InverseBoolConverter" />
+
     <!-- Constants  -->
     <system:Double x:Key="ProgressBarHeightExpanded">7</system:Double>
     <system:Double x:Key="ProgressBarHeightCollapsed">3</system:Double>
@@ -31,7 +32,11 @@
     <Style x:Key="ControlPanel" TargetType="{x:Type Grid}">
         <Setter Property="Background" Value="#111111"></Setter>
     </Style>
-    
+
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#DBDBDB"></Setter>
+    </Style>
+
     <Style x:Key="Player-Play" TargetType="{x:Type Button}"></Style>
 
     <Style TargetType="TextBlock" x:Key="SubtitlesTextblock">
@@ -146,8 +151,10 @@
                         <Ellipse Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}" Fill="{TemplateBinding Background}"></Ellipse>
                         <Ellipse Stroke="Black" StrokeDashArray="2,1" Margin="2" StrokeThickness="1" Visibility="Hidden" x:Name="focusDash"></Ellipse>
                         
-                        <ContentPresenter HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"/>
+                        <Border BorderThickness="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                        </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsKeyboardFocused" Value="true">
@@ -158,16 +165,17 @@
             </Setter.Value>
         </Setter>
         <Setter Property="BorderBrush" Value="#101010"/>
+        <Setter Property="Padding" Value="0"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="true">
                 <Setter Property="Background" Value="#272727"  />
             </Trigger>
             <Trigger Property="IsPressed" Value="true">
                 <Setter Property="Background" Value="#151515"  />
+                <Setter Property="Padding" Value="1,1,0,0"  />
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
                 <Setter Property="Foreground" Value="#888888"  />
-                <Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" />
             </Trigger>
 
         </Style.Triggers>

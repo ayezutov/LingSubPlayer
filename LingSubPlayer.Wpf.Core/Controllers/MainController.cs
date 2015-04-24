@@ -1,7 +1,7 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using LingSubPlayer.Common;
-using LingSubPlayer.Common.Data;
 using LingSubPlayer.Common.Subtitles;
 using LingSubPlayer.Wpf.Core.ViewModel;
 using Vlc.DotNet.Core;
@@ -11,16 +11,23 @@ namespace LingSubPlayer.Wpf.Core.Controllers
     public class MainController
     {
         private readonly ISubtitlesParser parser;
+        private readonly ApplicationUpdateController updateController;
+        private Task updateTask;
         public IMainView<MainController> View { get; private set; }
 
-        public MainController(IMainView<MainController> view, ISubtitlesParser parser)
+        public MainController(IMainView<MainController> view, 
+            ISubtitlesParser parser, 
+            ApplicationUpdateController updateController)
         {
             this.parser = parser;
+            this.updateController = updateController;
             View = view;
         }
 
         public async void OnLoad()
         {
+            var info = new AvailableUpdatesInformation();
+            updateTask = Task.Run(() => updateController.CheckForUpdatesAndDownload(View, info));
             var session = await View.ShowOpenVideoFileDialog();
 
 //            SessionData session = null; new SessionData()
@@ -29,6 +36,7 @@ namespace LingSubPlayer.Wpf.Core.Controllers
 //                SubtitlesOriginalFileName = @"d:\temp\LingSubPlayer\data\ENG.srt",
 //                SubtitlesTranslatedFileName = @"d:\temp\LingSubPlayer\data\RUS.srt"
 //            };
+
             if (session != null)
             {
                 using (var subtitlesOriginalStream = File.OpenRead(session.SubtitlesOriginalFileName))
@@ -42,14 +50,21 @@ namespace LingSubPlayer.Wpf.Core.Controllers
             }
         }
 
-        public static void InitializeApplication()
+
+        public static void InitializeApplication(Configuration configuration)
         {
-            var vlcBaseDirectory = new DirectoryInfo(Path.Combine(new Configuration().VlcPath, Environment.Is64BitProcess ? "x64" : "x86"));
+            var vlcBaseDirectory = new DirectoryInfo(Path.Combine(configuration.VlcPath, Environment.Is64BitProcess ? "x64" : "x86"));
 
             VlcContext.LibVlcDllsPath = vlcBaseDirectory.FullName;
             VlcContext.LibVlcPluginsPath = Path.Combine(vlcBaseDirectory.FullName, "plugins");
             VlcContext.StartupOptions.ScreenSaverEnabled = false;
             VlcContext.Initialize();
+        }
+
+        public void OnBeforeExit()
+        {
+            VlcContext.CloseAll();
+            updateTask.Wait();
         }
     }
 }

@@ -4,7 +4,7 @@ using LingSubPlayer.Wpf.Core.ViewModel;
 
 namespace LingSubPlayer.Wpf.Core.Controllers
 {
-    public interface IMainView<TController> : IView<TController> 
+    public interface IMainView<TController> : IView<TController>, IUpdatesAvailableView
     {
         Task<SessionData> ShowOpenVideoFileDialog();
 

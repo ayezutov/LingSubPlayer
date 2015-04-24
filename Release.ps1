@@ -1,4 +1,5 @@
 ﻿
+# $env:APPVEYOR_BUILD_VERSION = "0.1.1.1"
 $isLocalBuild = [string]::IsNullOrEmpty("$env:APPVEYOR");
 
 function Edit-XmlNodes {

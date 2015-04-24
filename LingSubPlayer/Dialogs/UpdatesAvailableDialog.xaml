@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="LingSubPlayer.Dialogs.UpdatesAvailableDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:LingSubPlayer.Wpf.Core.Controls;assembly=LingSubPlayer.Wpf.Core"
+             xmlns:controllers="clr-namespace:LingSubPlayer.Wpf.Core.Controllers;assembly=LingSubPlayer.Wpf.Core"
+             mc:Ignorable="d" 
+             d:DesignHeight="54.522" d:DesignWidth="349.955"
+             d:DataContext="{d:DesignInstance Type=controllers:AvailableUpdatesInformation}">
+    <StackPanel Orientation="Horizontal">
+        <Button Style="{StaticResource RoundButtonStyle}" Height="40" Width="40" ToolTip="An update is available. Click to install." Grid.Column="1"
+                
+                IsEnabled="{Binding IsReadyForRestart}" Click="RestartApplication"> 
+            <Grid Height="40" Width="40">
+                <controls:Pie CenterX="20" CenterY="20" Radius="19" Stroke="#979797" Angle="{Binding DownloadPercentage, Converter={StaticResource PercentageToAngleConverter}}" StrokeThickness="2"/>
+                <controls:Pie CenterX="20" CenterY="20" Radius="19" Stroke="White" Angle="{Binding ApplicationPercentage, Converter={StaticResource PercentageToAngleConverter}}" StrokeThickness="2"/>
+                <Image Source="../Images/download-available.png" Stretch="None">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Grid>
+        </Button>
+        
+        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+            <TextBlock VerticalAlignment="Center" Text="Downloading update..." Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}"></TextBlock>
+            <TextBlock VerticalAlignment="Center" Text="Applying update..." Visibility="{Binding IsApplying, Converter={StaticResource BooleanToVisibilityConverter}}"></TextBlock>
+            <TextBlock VerticalAlignment="Center" Text="&lt;-- Click button to&#10;restart and update" Visibility="{Binding IsReadyForRestart, Converter={StaticResource BooleanToVisibilityConverter}}"></TextBlock>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
