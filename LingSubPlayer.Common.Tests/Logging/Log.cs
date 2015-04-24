@@ -25,11 +25,11 @@ namespace LingSubPlayer.Common.Tests.Logging
         }
         
         [Test]
-        public void VerifyLogNameIsCorrectForAsyncMethod()
+        public async void VerifyLogNameIsCorrectForAsyncMethod()
         {
             var log = new Log();
 
-            Async(log);
+            await Async(log);
 
             var internalLog = log.Write as InternalLog;
 
@@ -49,6 +49,7 @@ namespace LingSubPlayer.Common.Tests.Logging
         public async Task Async(ILog log)
         {
             log.Write.Trace("X");
+            await Task.Run(() => { });
         }
     }
 }

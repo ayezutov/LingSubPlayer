@@ -16,8 +16,6 @@ namespace LingSubPlayer
     /// </summary>
     public partial class App
     {
-        private readonly MainController mainController;
-
         /// <summary>
         /// Application Entry Point.
         /// </summary>
