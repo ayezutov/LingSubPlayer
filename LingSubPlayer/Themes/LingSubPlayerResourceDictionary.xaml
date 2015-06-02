@@ -14,6 +14,8 @@
     <!-- Converters -->
     <converters:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter" />
     <converters:PercentageToAngleConverter x:Key="PercentageToAngleConverter" />
+    <converters:FullPathToFilenameConverter x:Key="FullPathToFilenameConverter" />
+    <converters:ItemsCountToVisibilityConverter x:Key="ItemsCountToVisibilityConverter" />
     <xctk:InverseBoolConverter x:Key="InverseBoolConverter" />
 
     <!-- Constants  -->
@@ -260,6 +262,9 @@
                 </StackPanel>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style TargetType="ToolTip">
+        <Setter Property="Background" Value="#494949"></Setter>
     </Style>
 
 </ResourceDictionary>

@@ -5,9 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:LingSubPlayer.Wpf.Core.Controls;assembly=LingSubPlayer.Wpf.Core"
              xmlns:controllers="clr-namespace:LingSubPlayer.Wpf.Core.Controllers;assembly=LingSubPlayer.Wpf.Core"
+             xmlns:data="clr-namespace:LingSubPlayer.Common.Data;assembly=LingSubPlayer.Common"
              mc:Ignorable="d" 
              d:DesignHeight="54.522" d:DesignWidth="349.955"
-             d:DataContext="{d:DesignInstance Type=controllers:AvailableUpdatesInformation}">
+             d:DataContext="{d:DesignInstance Type=data:AvailableUpdatesInformation}">
     <StackPanel Orientation="Horizontal">
         <Button Style="{StaticResource RoundButtonStyle}" Height="40" Width="40" ToolTip="An update is available. Click to install." Grid.Column="1"
                 

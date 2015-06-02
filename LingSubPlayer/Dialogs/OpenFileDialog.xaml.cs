@@ -1,9 +1,11 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using LingSubPlayer.Common.Data;
 using LingSubPlayer.Wpf.Core.Controllers;
 using LingSubPlayer.Wpf.Core.Controls;
+using LingSubPlayer.Wpf.Core.MVC;
 using LingSubPlayer.Wpf.Core.Tests.Validators;
 
 namespace LingSubPlayer
@@ -11,19 +13,12 @@ namespace LingSubPlayer
     /// <summary>
     /// Interaction logic for OpenFileDialog.xaml
     /// </summary>
-    public partial class OpenFileDialog : UserControl, IOpenFileDialogView
+    public partial class OpenFileDialog : IOpenFileDialogView, IModalDialog
     {
         public static readonly DependencyProperty SessionDataProperty = DependencyProperty.Register(
             "SessionData", typeof (SessionData), typeof (OpenFileDialog), new PropertyMetadata(default(SessionData)));
 
-        public static readonly DependencyProperty CanCancelProperty = DependencyProperty.Register(
-            "CanCancel", typeof (bool), typeof (OpenFileDialog), new PropertyMetadata(true));
-
-        public bool CanCancel
-        {
-            get { return (bool) GetValue(CanCancelProperty); }
-            set { SetValue(CanCancelProperty, value); }
-        }
+        public OpenFileDialogController Controller { get; set; }
 
         public SessionData SessionData
         {
@@ -36,14 +31,17 @@ namespace LingSubPlayer
             InitializeComponent();
         }
 
-        private void OnCancelClicked(object sender, RoutedEventArgs e)
+        protected override void OnShown(ExtendedUserControl sender)
         {
-            WindowContainer.CloseCurrentWindow(this, false);
+            Controller.Start();
         }
 
-        public OpenFileDialogController Controller { get; set; }
+        private void OnCancelClicked(object sender, RoutedEventArgs e)
+        {
+            Controller.CancelTriggered();
+        }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void OpenClicked(object sender, RoutedEventArgs e)
         {
             if (!Validator.IsValid(VisualTreeHelper.GetParent(this)))
             {
@@ -51,7 +49,7 @@ namespace LingSubPlayer
                 return;
             }
 
-            WindowContainer.CloseCurrentWindow(this);
+            Controller.OpenTriggered();
         }
     }
 }

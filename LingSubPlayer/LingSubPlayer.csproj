@@ -179,9 +179,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\IModalDialog.cs" />
+    <Compile Include="Infrastructure\ViewManager.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\OpenRecentFileOrNewModalDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\UpdatesAvailableDialog.xaml">
       <SubType>Designer</SubType>
@@ -198,6 +204,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Dialogs\OpenRecentFileOrNewModalDialog.xaml.cs">
+      <DependentUpon>OpenRecentFileOrNewModalDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\UpdatesAvailableDialog.xaml.cs">
       <DependentUpon>UpdatesAvailableDialog.xaml</DependentUpon>
@@ -285,9 +294,21 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LingSubPlayer.Business\LingSubPlayer.Business.csproj">
+      <Project>{8300323F-6625-4851-9060-1A497DEC6FF8}</Project>
+      <Name>LingSubPlayer.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LingSubPlayer.Common\LingSubPlayer.Common.csproj">
       <Project>{9A54737C-B098-4C43-88BB-0C71790EE47B}</Project>
       <Name>LingSubPlayer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LingSubPlayer.DataAccess\LingSubPlayer.DataAccess.csproj">
+      <Project>{95d4e94f-74e2-431a-bfac-ccfc279f1714}</Project>
+      <Name>LingSubPlayer.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LingSubPlayer.Presentation\LingSubPlayer.Presentation.csproj">
+      <Project>{F5DE7FDD-44B3-4B0C-8C9E-33BEEF224837}</Project>
+      <Name>LingSubPlayer.Presentation</Name>
     </ProjectReference>
     <ProjectReference Include="..\LingSubPlayer.Wpf.Core\LingSubPlayer.Wpf.Core.csproj">
       <Project>{ABB3C3A7-62E2-4E4E-9CF7-4C15734EE154}</Project>

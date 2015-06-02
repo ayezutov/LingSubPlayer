@@ -2,7 +2,10 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using LingSubPlayer.Common;
+using LingSubPlayer.Common.Data;
 using LingSubPlayer.Common.Subtitles;
+using LingSubPlayer.Wpf.Core.MVC;
+using LingSubPlayer.Wpf.Core.MVC.Main;
 using LingSubPlayer.Wpf.Core.ViewModel;
 using Vlc.DotNet.Core;
 
@@ -10,17 +13,23 @@ namespace LingSubPlayer.Wpf.Core.Controllers
 {
     public class MainController
     {
+        private readonly IViewManager viewManager;
         private readonly ISubtitlesParser parser;
         private readonly ApplicationUpdateController updateController;
+        private readonly OpenNewOrRecentController openNewOrRecentController;
         private Task updateTask;
-        public IMainView<MainController> View { get; private set; }
+        public IMainView View { get; private set; }
 
-        public MainController(IMainView<MainController> view, 
+        public MainController(IMainView view,
+            IViewManager viewManager,
             ISubtitlesParser parser, 
-            ApplicationUpdateController updateController)
+            ApplicationUpdateController updateController,
+            OpenNewOrRecentController openNewOrRecentController)
         {
+            this.viewManager = viewManager;
             this.parser = parser;
             this.updateController = updateController;
+            this.openNewOrRecentController = openNewOrRecentController;
             View = view;
         }
 
@@ -28,14 +37,9 @@ namespace LingSubPlayer.Wpf.Core.Controllers
         {
             var info = new AvailableUpdatesInformation();
             updateTask = Task.Run(() => updateController.CheckForUpdatesAndDownload(View, info));
-            var session = await View.ShowOpenVideoFileDialog();
 
-//            SessionData session = null; new SessionData()
-//            {
-//                VideoFileName = @"d:\temp\LingSubPlayer\data\cartoon.flv",
-//                SubtitlesOriginalFileName = @"d:\temp\LingSubPlayer\data\ENG.srt",
-//                SubtitlesTranslatedFileName = @"d:\temp\LingSubPlayer\data\RUS.srt"
-//            };
+            await viewManager.Show(openNewOrRecentController.View);
+            SessionData session = openNewOrRecentController.SessionData;
 
             if (session != null)
             {
@@ -65,6 +69,7 @@ namespace LingSubPlayer.Wpf.Core.Controllers
         {
             VlcContext.CloseAll();
             updateTask.Wait();
+            Environment.Exit(0);
         }
     }
 }

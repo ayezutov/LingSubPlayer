@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using LingSubPlayer.Common;
+using LingSubPlayer.Common.Data;
 using LingSubPlayer.Common.Logging;
 using LingSubPlayer.Install;
 using Splat;

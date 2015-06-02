@@ -1,24 +1,29 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using Autofac;
 using LingSubPlayer.Common.Data;
+using LingSubPlayer.Dialogs;
 using LingSubPlayer.Wpf.Core.Controllers;
 using LingSubPlayer.Wpf.Core.Controls;
+using LingSubPlayer.Wpf.Core.MVC.Main;
 using LingSubPlayer.Wpf.Core.ViewModel;
-using Vlc.DotNet.Core;
 using Vlc.DotNet.Core.Medias;
+using Binding = System.Windows.Data.Binding;
+using Control = System.Windows.Controls.Control;
+using MessageBox = System.Windows.MessageBox;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace LingSubPlayer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IMainView<MainController>
+    public partial class MainWindow : Window, IMainView
     {
         private readonly ILifetimeScope container;
 
@@ -58,21 +63,6 @@ namespace LingSubPlayer
             }
         }
 
-        public async Task<SessionData> ShowOpenVideoFileDialog()
-        {
-            var controller = container.Resolve<OpenFileDialogController>();
-            var openFileDialog = controller.View as OpenFileDialog;
-            openFileDialog.SessionData = new SessionData();
-            openFileDialog.CanCancel = false;
-            await ModalWindowContainer.ShowControlAsWindow(openFileDialog, new WindowParameters
-            {
-                WindowStyle = WindowStyle.None,
-                Style = ChildWindowStyle,
-                Width = 500
-            });
-            return openFileDialog.SessionData;
-        }
-
         public void PlayFile(string videoFileName, CurrentSubtitleView subtitles)
         {
             DataContext = subtitles;
@@ -82,6 +72,15 @@ namespace LingSubPlayer
 
             VlcControl.Media = new PathMedia(videoFileName);
             VlcControl.Play();
+        }
+
+        public async Task ShowDialog<TController>(IView<TController> control)
+        {
+            await ModalWindowContainer.ShowControlAsWindow(control as Control, new WindowParameters
+            {
+                WindowStyle = WindowStyle.None,
+                Style = ChildWindowStyle
+            });
         }
 
         public void ShowUpdatesAvailable(AvailableUpdatesInformation availableUpdatesInformation)

@@ -51,5 +51,28 @@ namespace LingSubPlayer.Common.Data
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        protected bool Equals(SessionData other)
+        {
+            return string.Equals(videoFileName, other.videoFileName) || (string.IsNullOrEmpty(videoFileName) && string.IsNullOrEmpty(other.VideoFileName));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((SessionData) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (videoFileName != null ? videoFileName.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("VideoFileName: {0}, SubtitlesOriginalFileName: {1}, SubtitlesTranslatedFileName: {2}", VideoFileName, SubtitlesOriginalFileName, SubtitlesTranslatedFileName);
+        }
     }
 }

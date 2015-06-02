@@ -118,7 +118,7 @@ namespace LingSubPlayer.Wpf.Core.Controls
 
         public Task ShowWindow(ChildWindow childWindow)
         {
-            TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool?> taskCompletionSource = new TaskCompletionSource<bool?>();
             DependencyPropertyChangedEventHandler windowControlOnIsVisibleChanged = null;
 
             windowControlOnIsVisibleChanged = (sender, args) =>

@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using LingSubPlayer.Common.Subtitles.Data;
 
-namespace LingSubPlayer.Wpf.Core.Tests.TestFixture
+namespace LingSubPlayer.Wpf.Core.Tests.Fixtures
 {
     public class SampleDependencyPropertyEnabledClass: DependencyObject
     {

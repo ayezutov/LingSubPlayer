@@ -95,6 +95,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -127,15 +128,8 @@
   <ItemGroup>
     <Compile Include="AttachedProperties.cs" />
     <Compile Include="Commands.cs" />
-    <Compile Include="Controllers\ApplicationUpdateController.cs" />
-    <Compile Include="Controllers\AvailableUpdatesInformation.cs" />
-    <Compile Include="Controllers\IMainView.cs" />
-    <Compile Include="Controllers\IOpenFileDialogView.cs" />
-    <Compile Include="Controllers\IUpdatesAvailableView.cs" />
-    <Compile Include="Controllers\IView.cs" />
-    <Compile Include="Controllers\OpenFileDialogController.cs" />
-    <Compile Include="Controllers\SplatLogger.cs" />
     <Compile Include="Controls\Arc.cs" />
+    <Compile Include="Controls\ExtendedUserControl.cs" />
     <Compile Include="Controls\OpenFileDialogParameters.cs" />
     <Compile Include="Controls\TextBoxWithButton.xaml.cs">
       <DependentUpon>TextBoxWithButton.xaml</DependentUpon>
@@ -143,19 +137,35 @@
     <Compile Include="Controls\VlcDependencyControl.cs" />
     <Compile Include="Controls\WindowContainer.cs" />
     <Compile Include="Controls\WindowParameters.cs" />
+    <Compile Include="Converters\FullPathToFilenameConverter.cs" />
+    <Compile Include="Converters\ItemsCountToVisibilityConverter.cs" />
     <Compile Include="Converters\PercentageToAngleConverter.cs" />
     <Compile Include="Converters\TimeSpanToDoubleConverter.cs" />
-    <Compile Include="Controllers\MainController.cs" />
+    <Compile Include="Main\CurrentSubtitleView.cs" />
+    <Compile Include="Main\IMainView.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Main\MainController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\FileExistsValidationRule.cs" />
     <Compile Include="Validators\Validator.cs" />
-    <Compile Include="ViewModel\AvailableUpdatesView.cs" />
-    <Compile Include="ViewModel\CurrentSubtitleView.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LingSubPlayer.Business\LingSubPlayer.Business.csproj">
+      <Project>{8300323F-6625-4851-9060-1A497DEC6FF8}</Project>
+      <Name>LingSubPlayer.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LingSubPlayer.Common\LingSubPlayer.Common.csproj">
       <Project>{9a54737c-b098-4c43-88bb-0c71790ee47b}</Project>
       <Name>LingSubPlayer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LingSubPlayer.DataAccess\LingSubPlayer.DataAccess.csproj">
+      <Project>{95D4E94F-74E2-431A-BFAC-CCFC279F1714}</Project>
+      <Name>LingSubPlayer.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LingSubPlayer.Presentation\LingSubPlayer.Presentation.csproj">
+      <Project>{f5de7fdd-44b3-4b0c-8c9e-33beef224837}</Project>
+      <Name>LingSubPlayer.Presentation</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +178,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

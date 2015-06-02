@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LingSubPlayer.Wpf.Core.Annotations;
 
-namespace LingSubPlayer.Wpf.Core.Controllers
+namespace LingSubPlayer.Common.Data
 {
     public class AvailableUpdatesInformation : INotifyPropertyChanged
     {
