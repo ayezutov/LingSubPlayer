@@ -6,7 +6,6 @@ using LingSubPlayer.Common.Data;
 using LingSubPlayer.Infrastructure;
 using LingSubPlayer.Presentation.OpenFileDialog;
 using LingSubPlayer.Wpf.Core.Controls;
-using LingSubPlayer.Wpf.Core.MVC;
 using LingSubPlayer.Wpf.Core.Validators;
 
 namespace LingSubPlayer

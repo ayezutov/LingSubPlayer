@@ -4,7 +4,6 @@ using System.Windows;
 using LingSubPlayer.Presentation;
 using LingSubPlayer.Wpf.Core.Controls;
 using LingSubPlayer.Wpf.Core.Main;
-using LingSubPlayer.Wpf.Core.MVC;
 
 namespace LingSubPlayer.Infrastructure
 {
