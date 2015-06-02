@@ -1,6 +1,6 @@
-using LingSubPlayer.Wpf.Core.ViewModel;
+using LingSubPlayer.Presentation.ViewModels;
 
-namespace LingSubPlayer.Wpf.Core.Controllers
+namespace LingSubPlayer.Presentation.OpenNewOrRecent
 {
     public interface IOpenNewOrRecentView: IView<OpenNewOrRecentController>
     {

@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using Splat;
 
-namespace LingSubPlayer.Install
+namespace LingSubPlayer.Presentation
 {
     public class SplatLogger : ILogger, IDisposable
     {

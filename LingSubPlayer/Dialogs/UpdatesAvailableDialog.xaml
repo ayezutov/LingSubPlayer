@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:LingSubPlayer.Wpf.Core.Controls;assembly=LingSubPlayer.Wpf.Core"
-             xmlns:controllers="clr-namespace:LingSubPlayer.Wpf.Core.Controllers;assembly=LingSubPlayer.Wpf.Core"
              xmlns:data="clr-namespace:LingSubPlayer.Common.Data;assembly=LingSubPlayer.Common"
              mc:Ignorable="d" 
              d:DesignHeight="54.522" d:DesignWidth="349.955"

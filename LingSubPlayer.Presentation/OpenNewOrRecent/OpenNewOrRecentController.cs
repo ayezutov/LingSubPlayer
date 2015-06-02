@@ -1,9 +1,9 @@
 using LingSubPlayer.Business;
 using LingSubPlayer.Common.Data;
-using LingSubPlayer.Wpf.Core.MVC;
-using LingSubPlayer.Wpf.Core.ViewModel;
+using LingSubPlayer.Presentation.OpenFileDialog;
+using LingSubPlayer.Presentation.ViewModels;
 
-namespace LingSubPlayer.Wpf.Core.Controllers
+namespace LingSubPlayer.Presentation.OpenNewOrRecent
 {
     public class OpenNewOrRecentController
     {

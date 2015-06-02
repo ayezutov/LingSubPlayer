@@ -4,9 +4,9 @@ using Autofac;
 using LingSubPlayer.Business;
 using LingSubPlayer.Common;
 using LingSubPlayer.DataAccess;
+using LingSubPlayer.Presentation;
 using LingSubPlayer.Wpf.Core;
 using LingSubPlayer.Wpf.Core.Annotations;
-using LingSubPlayer.Wpf.Core.Controllers;
 
 namespace LingSubPlayer
 {

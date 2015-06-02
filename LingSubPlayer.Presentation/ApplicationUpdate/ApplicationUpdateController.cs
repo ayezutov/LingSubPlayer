@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using LingSubPlayer.Common;
 using LingSubPlayer.Common.Data;
 using LingSubPlayer.Common.Logging;
-using LingSubPlayer.Install;
 using Splat;
 using Squirrel;
 
-namespace LingSubPlayer.Wpf.Core.Controllers
+namespace LingSubPlayer.Presentation.ApplicationUpdate
 {
     public class ApplicationUpdateController
     {

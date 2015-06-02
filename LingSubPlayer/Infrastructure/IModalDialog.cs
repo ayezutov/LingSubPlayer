@@ -1,4 +1,4 @@
-﻿namespace LingSubPlayer
+﻿namespace LingSubPlayer.Infrastructure
 {
     public interface IModalDialog
     {

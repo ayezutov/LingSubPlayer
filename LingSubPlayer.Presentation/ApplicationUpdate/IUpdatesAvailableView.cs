@@ -1,6 +1,6 @@
 using LingSubPlayer.Common.Data;
 
-namespace LingSubPlayer.Wpf.Core.Controllers
+namespace LingSubPlayer.Presentation.ApplicationUpdate
 {
     public interface IUpdatesAvailableView
     {

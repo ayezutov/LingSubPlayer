@@ -4,7 +4,7 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Features.Scanning;
 
-namespace LingSubPlayer
+namespace LingSubPlayer.Common
 {
     public static class ContainerBuilderExtensions
     {

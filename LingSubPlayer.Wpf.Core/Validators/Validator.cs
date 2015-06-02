@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace LingSubPlayer.Wpf.Core.Tests.Validators
+namespace LingSubPlayer.Wpf.Core.Validators
 {
     public static class Validator
     {

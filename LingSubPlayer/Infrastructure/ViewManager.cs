@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
-using LingSubPlayer.Wpf.Core.Controllers;
+using LingSubPlayer.Presentation;
 using LingSubPlayer.Wpf.Core.Controls;
+using LingSubPlayer.Wpf.Core.Main;
 using LingSubPlayer.Wpf.Core.MVC;
-using LingSubPlayer.Wpf.Core.MVC.Main;
 
 namespace LingSubPlayer.Infrastructure
 {

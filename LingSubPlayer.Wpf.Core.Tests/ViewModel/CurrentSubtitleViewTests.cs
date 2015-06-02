@@ -2,8 +2,8 @@
 using System.Windows;
 using System.Windows.Data;
 using LingSubPlayer.Common.Subtitles.Data;
+using LingSubPlayer.Wpf.Core.Main;
 using LingSubPlayer.Wpf.Core.Tests.Fixtures;
-using LingSubPlayer.Wpf.Core.ViewModel;
 using NUnit.Framework;
 
 namespace LingSubPlayer.Wpf.Core.Tests.ViewModel

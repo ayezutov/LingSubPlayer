@@ -6,13 +6,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:viewModel="clr-namespace:LingSubPlayer.Wpf.Core.ViewModel;assembly=LingSubPlayer.Wpf.Core"
-        xmlns:controllers="clr-namespace:LingSubPlayer.Wpf.Core.Controllers;assembly=LingSubPlayer.Wpf.Core"
         xmlns:dialogs="clr-namespace:LingSubPlayer.Dialogs"
+        xmlns:main="clr-namespace:LingSubPlayer.Wpf.Core.Main;assembly=LingSubPlayer.Wpf.Core"
         Title="LingSubPlayer" Height="364" Width="576"
         Background="Black"
         SnapsToDevicePixels="True"
-        d:DataContext="{d:DesignInstance Type=viewModel:CurrentSubtitleView}">
+        d:DataContext="{d:DesignInstance Type=main:CurrentSubtitleView}">
 
     <Window.CommandBindings>
         <CommandBinding Command="TogglePlayPause" Executed="TogglePlayPauseExecuted"></CommandBinding>

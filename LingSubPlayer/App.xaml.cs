@@ -4,7 +4,7 @@ using System.Windows;
 using Autofac;
 using LingSubPlayer.Common;
 using LingSubPlayer.Install;
-using LingSubPlayer.Wpf.Core.Controllers;
+using LingSubPlayer.Wpf.Core.Main;
 using NLog;
 
 //[assembly: AssemblyMetadata("SquirrelAwareVersion", "1")]

@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using LingSubPlayer.Wpf.Core.Controllers;
 
-namespace LingSubPlayer.Wpf.Core.MVC
+namespace LingSubPlayer.Presentation
 {
     public interface IViewManager
     {

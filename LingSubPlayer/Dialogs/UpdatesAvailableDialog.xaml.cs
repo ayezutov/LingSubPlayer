@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using LingSubPlayer.Common.Logging;
-using LingSubPlayer.Wpf.Core.Controllers;
 using NLog;
 
 namespace LingSubPlayer.Dialogs

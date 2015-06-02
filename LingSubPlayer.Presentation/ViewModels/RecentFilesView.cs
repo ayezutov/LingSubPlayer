@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using LingSubPlayer.Common.Data;
 
-namespace LingSubPlayer.Wpf.Core.ViewModel
+namespace LingSubPlayer.Presentation.ViewModels
 {
     public class RecentFilesView
     {

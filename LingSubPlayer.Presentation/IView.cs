@@ -1,4 +1,4 @@
-namespace LingSubPlayer.Wpf.Core.Controllers
+namespace LingSubPlayer.Presentation
 {
     public interface IView<TController>
     {

@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using LingSubPlayer.Common;
 using LingSubPlayer.Common.Data;
 using LingSubPlayer.Common.Subtitles;
-using LingSubPlayer.Wpf.Core.MVC;
-using LingSubPlayer.Wpf.Core.MVC.Main;
-using LingSubPlayer.Wpf.Core.ViewModel;
+using LingSubPlayer.Presentation;
+using LingSubPlayer.Presentation.ApplicationUpdate;
+using LingSubPlayer.Presentation.OpenNewOrRecent;
 using Vlc.DotNet.Core;
 
-namespace LingSubPlayer.Wpf.Core.Controllers
+namespace LingSubPlayer.Wpf.Core.Main
 {
     public class MainController
     {

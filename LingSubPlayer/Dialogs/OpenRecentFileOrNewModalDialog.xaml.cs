@@ -1,8 +1,9 @@
 ﻿using System.Windows.Input;
 using LingSubPlayer.Common.Data;
-using LingSubPlayer.Wpf.Core.Controllers;
+using LingSubPlayer.Infrastructure;
+using LingSubPlayer.Presentation.OpenNewOrRecent;
+using LingSubPlayer.Presentation.ViewModels;
 using LingSubPlayer.Wpf.Core.Controls;
-using LingSubPlayer.Wpf.Core.ViewModel;
 
 namespace LingSubPlayer.Dialogs
 {

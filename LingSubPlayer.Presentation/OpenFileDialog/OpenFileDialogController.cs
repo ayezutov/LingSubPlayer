@@ -1,7 +1,6 @@
 using LingSubPlayer.Common.Data;
-using LingSubPlayer.Wpf.Core.MVC;
 
-namespace LingSubPlayer.Wpf.Core.Controllers
+namespace LingSubPlayer.Presentation.OpenFileDialog
 {
     public class OpenFileDialogController
     {

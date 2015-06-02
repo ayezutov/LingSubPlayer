@@ -5,7 +5,7 @@ using System.Windows;
 using LingSubPlayer.Common.Subtitles.Data;
 using LingSubPlayer.Wpf.Core.Annotations;
 
-namespace LingSubPlayer.Wpf.Core.ViewModel
+namespace LingSubPlayer.Wpf.Core.Main
 {
     public class CurrentSubtitleView : DependencyObject, INotifyPropertyChanged
     {

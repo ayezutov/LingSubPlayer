@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using LingSubPlayer.Wpf.Core.Controllers;
-using LingSubPlayer.Wpf.Core.ViewModel;
+using LingSubPlayer.Presentation;
+using LingSubPlayer.Presentation.ApplicationUpdate;
 
-namespace LingSubPlayer.Wpf.Core.MVC.Main
+namespace LingSubPlayer.Wpf.Core.Main
 {
     public interface IMainView : IView<MainController>, IUpdatesAvailableView
     {
