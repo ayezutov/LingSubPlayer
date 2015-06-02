@@ -55,7 +55,9 @@
     <Compile Include="IView.cs" />
     <Compile Include="IViewManager.cs" />
     <Compile Include="OpenFileDialog\IOpenFileDialogView.cs" />
-    <Compile Include="OpenFileDialog\OpenFileDialogController.cs" />
+    <Compile Include="OpenFileDialog\OpenFileDialogController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="OpenNewOrRecent\IOpenNewOrRecentView.cs" />
     <Compile Include="OpenNewOrRecent\OpenNewOrRecentController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

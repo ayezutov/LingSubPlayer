@@ -43,7 +43,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecentFilesService.cs" />
-    <Compile Include="SessionValidationService.cs" />
+    <Compile Include="SessionValidationService.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ValidationResult.cs" />
   </ItemGroup>
   <ItemGroup>
